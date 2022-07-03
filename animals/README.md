@@ -1,4 +1,4 @@
-# Getting Started
+# Модуль управления сущностями
 
 ### Reference Documentation
 

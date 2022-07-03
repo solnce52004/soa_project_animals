@@ -87,9 +87,24 @@
 - mvn 3.8.2
 
 #### Профили:
+
 - dev - По умолчанию, база данных H2 (In memory)
 - prod - База данных PostgreSQL
 - для тестирования - отдельная база (и логирование в отдельную директорию)/testcontainers
+
+#### Для сборки требуется:
+Выполнять в системе, где
+  - (установлен docker???)
+  - развернута Postgresql, 
+  - создана базой animals_db 
+  - пользователь(роль) animal с паролем animal
+В файлах конфигурации модулей установить флаг, разрешающий выполнять миграции.
+Проверить допустимость для системы прочих настроек).
+Выполнить команду в корне проекта: mvn clean package -DDB_USER=animal -DDB_PASSWORD=animal
+Запустить созданные в модулях jar-файлы, выполнив команды (например из корня):
+    java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./auth/target/auth-0.0.1-SNAPSHOT.jar
+    java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./animals/target/animals-0.0.1-SNAPSHOT.jar
+
 
 #### Документация API Auth
 [Auth Swagger Api Documentation](http://localhost:8020/auth/swagger-ui/)

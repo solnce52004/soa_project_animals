@@ -61,17 +61,18 @@ spring:
     fail-on-missing-locations: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+    out-of-order: true
   ####
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     generate-ddl: true
     show-sql: true
     # решает ошибку ClassCastException EntityManagerHolder
     open-in-view: false
     hibernate:
       ddl-auto: none
-    #      use-new-id-generator-mappings: false
+      use-new-id-generator-mappings: true
 
     properties:
       hibernate:
@@ -92,7 +93,7 @@ spring:
       write_dates_as_timestamps: false
 
 logging:
-  config: "classpath:log4j2.properties"
+  config: classpath:log4j2.properties
   level:
     ROOT: INFO
     org:
@@ -122,12 +123,13 @@ spring:
     password: ${DB_PASSWORD}
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     generate-ddl: true
     show-sql: false
     open-in-view: false
     hibernate:
       ddl-auto: none
+      use-new-id-generator-mappings: true
 
     properties:
       hibernate:
@@ -148,7 +150,7 @@ spring:
       write_dates_as_timestamps: false
 
 logging:
-  config: "classpath:log4j2.properties"
+  config: classpath:log4j2.properties
   level:
     ROOT: ERROR
     org:

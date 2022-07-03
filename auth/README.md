@@ -1,4 +1,4 @@
-# Getting Started
+# Модуль авторизации
 
 ### Reference Documentation
 
