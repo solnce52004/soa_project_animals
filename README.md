@@ -95,15 +95,25 @@
 #### Для сборки требуется:
 Выполнять в системе, где
   - (установлен docker???)
-  - развернута Postgresql, 
-  - создана базой animals_db 
-  - пользователь(роль) animal с паролем animal
+  - развернута СУБД Postgresql, 
+  - созданы базы animals_db и auth_db 
+  - пользователь(роль): animal, пароль: animal
+
+Например, используя следующие команды
+
+        psql postgres
+        CREATE USER animal WITH PASSWORD 'animal';
+        CREATE DATABASE animals_db TEMPLATE=template0 ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';
+        CREATE DATABASE auth_db TEMPLATE=template0 ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';
+         \q
+
 В файлах конфигурации модулей установить флаг, разрешающий выполнять миграции.
 Проверить допустимость для системы прочих настроек).
 Выполнить команду в корне проекта: mvn clean package -DDB_USER=animal -DDB_PASSWORD=animal
-Запустить созданные в модулях jar-файлы, выполнив команды (например из корня):
-    java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./auth/target/auth-0.0.1-SNAPSHOT.jar
-    java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./animals/target/animals-0.0.1-SNAPSHOT.jar
+Запустить созданные в модулях jar-файлы, выполнив команды из корня (например):
+
+        java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./auth/target/auth-0.0.1-SNAPSHOT.jar
+        java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./animals/target/animals-0.0.1-SNAPSHOT.jar
 
 
 #### Документация API Auth
@@ -111,11 +121,14 @@
 
 | Method | Description | URL |
 |----------------|---------|----------------|
-| GET | Создать | {URL}/auth/api/v1/sign-in |
+| GET | Залогиниться | {URL}/auth/api/v1/sign-in |
+...
 
 #### Документация API Animals
 [Animals Swagger Api Documentation](http://localhost:8030/animals/swagger-ui/)
 
 | Method | Description | URL |
 |----------------|---------|----------------|
-| GET | Создать | {URL}/animals/api/v1/create |
+| GET | Получить | {URL}/animals/api/v1/{id} |
+| POST | Создать | {URL}/animals/api/v1/ |
+...

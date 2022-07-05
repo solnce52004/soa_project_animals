@@ -53,7 +53,7 @@ public class FindAnimalByIdApiService implements ApiService {
 
         return new ResponseDTO()
                 .setInfo(CODE_200)
-                .setError(null)
+//                .setError(null)
                 .setAnimals(Collections.singleton(AnimalDTO.animalMapToDto(animal)))
                 .setHttpStatus(HttpStatus.OK);
     }

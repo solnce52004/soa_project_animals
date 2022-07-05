@@ -11,6 +11,7 @@ server:
     whitelabel:
       enabled: false
 
+#http://localhost:8020/auth/swagger-ui/
 springfox:
   documentation:
     swagger-ui:
@@ -21,6 +22,25 @@ spring:
     active: dev
   mvc:
     throw-exception-if-no-handler-found: true
+    
+  jackson:
+    serialization:
+      indent-output: true
+      write_dates_as_timestamps: false
+
+
+jwt:
+  header: "Authorization"
+  secret: "authsecret-lsdfahksdjfhkljsdfkjsdhfaslkjdhfkajlsdfha-skldjhfa-sldkfhaslcxkvh-dgfasdkfjhkjh"
+  expiration: 3600000
+  refresh: 86400000
+
+signin:
+  tries: 10
+  expire: 3600000
+## For test
+#  expiration: 60000
+#  refresh: 120000
 
 ---
 #DEV
@@ -32,7 +52,7 @@ spring:
 ####
 #  datasource:
 #    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:mem:animals_db;MODE=PostgreSQL
+#    url: jdbc:h2:mem:auth_db;MODE=PostgreSQL
 #    username: root
 #    password: 123
 #  sql:
@@ -48,14 +68,14 @@ spring:
 
 ####
   datasource:
-    url: jdbc:postgresql://localhost:5432/animals_db
+    url: jdbc:postgresql://localhost:5432/auth_db
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: true
-    url: jdbc:postgresql://localhost:5432/animals_db
+    url: jdbc:postgresql://localhost:5432/auth_db
     user: ${DB_USER}
     password: ${DB_PASSWORD}
     fail-on-missing-locations: true
@@ -92,6 +112,7 @@ spring:
       indent-output: true
       write_dates_as_timestamps: false
 
+
 logging:
   config: classpath:log4j2.properties
   level:
@@ -103,7 +124,6 @@ logging:
           jdbc: DEBUG
         transaction: DEBUG
         orm.jpa: DEBUG
-
 ---
 #PROD
 spring:
@@ -111,14 +131,14 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/animals_db
+    url: jdbc:postgresql://localhost:5432/auth_db
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: false
-    url: jdbc:postgresql://localhost:5432/animals_db
+    url: jdbc:postgresql://localhost:5432/auth_db
     user: ${DB_USER}
     password: ${DB_PASSWORD}
 

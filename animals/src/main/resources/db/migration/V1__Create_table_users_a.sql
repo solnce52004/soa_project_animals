@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS "animals_db"."public"."users"
     "password" VARCHAR(255),
     "status" VARCHAR(255) DEFAULT 'ACTIVE'::VARCHAR NOT NULL,
     "token" VARCHAR(255),
-    "provider" VARCHAR(50),
     "reset_token" VARCHAR(255),
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL

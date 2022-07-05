@@ -1,5 +1,6 @@
 package ru.example.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,16 +13,17 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "roles")
+@Entity(name = "permissions")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id", "permissions"})
-@ToString(exclude = {"id", "permissions"})
+@EqualsAndHashCode(exclude = {"id", "roles"})
+@ToString(exclude = {"id", "roles"})
 @DynamicUpdate
 @DynamicInsert
-public class Role implements Serializable {
+
+public class Permission implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Id
@@ -33,15 +35,12 @@ public class Role implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @JsonIgnore
     @ManyToMany(
             fetch = FetchType.LAZY,
+            mappedBy = "permissions",
             cascade = CascadeType.PERSIST
     )
-    @JoinTable(
-            name = "role_permission",
-            joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "permission_id")}
-    )
     @Fetch(value = FetchMode.JOIN)
-    private Set<Permission> permissions = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 }
