@@ -1,6 +1,5 @@
 package ru.example.auth.config.security.jwt;
 
-
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,23 +18,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
-//@PropertySource(value = {"classpath:application.yaml"})
 @Component
-public class JwtTokenProvider {
+public class JwtAccessTokenProvider {
     private final UserDetailsService userDetailsService;
-
-    @Value("${jwt.header}")
-    public String authHeader;
-
-    @Value("${jwt.secret}")
-    public String secretKey;
-
-    @Value("${jwt.expiration}")
-    public long expirationInMs;
+    private String secretKey;
+    private final long expirationInMs;
 
     @Autowired
-    public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public JwtAccessTokenProvider(
+            @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+            @Value("${jwt.secret-key}") String secretKey,
+            @Value("${jwt.access-expires-at}") long expirationInMs
+    ) {
         this.userDetailsService = userDetailsService;
+        this.secretKey = secretKey;
+        this.expirationInMs = expirationInMs;
     }
 
     @PostConstruct
@@ -44,10 +41,9 @@ public class JwtTokenProvider {
                 .encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String username, String password) {
+    public String createAccessToken(String username, String password) {
         final Claims claims = Jwts.claims().setSubject(username);
         claims.put("password", password);
-
         final Date dateNow = new Date();
         final Date dateExpiration = new Date(dateNow.getTime() + expirationInMs);
 
@@ -55,28 +51,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(dateNow)
                 .setExpiration(dateExpiration)
-                .signWith(
-                        SignatureAlgorithm.HS256,
-                        secretKey.getBytes(StandardCharsets.UTF_8)
-                )
-                .compact();
-    }
-
-    public String createVerifyToken(String username, String password) {
-        final Claims claims = Jwts.claims().setSubject(username);
-        claims.put("password", password);
-
-        final Date dateNow = new Date();
-        final Date dateExpiration = new Date(dateNow.getTime() + 15 * 60 * 1000);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(dateNow)
-                .setExpiration(dateExpiration)
-                .signWith(
-                        SignatureAlgorithm.HS256,
-                        secretKey
-                )
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -90,8 +65,6 @@ public class JwtTokenProvider {
             // НЕ протух?
             return !claimsJws.getBody().getExpiration().before(new Date());
 
-        } catch (SignatureException e) {
-            throw new JwtAuthException("Invalid JWT signature", e);
         } catch (MalformedJwtException e) {
             throw new JwtAuthException("Invalid JWT token", e);
         } catch (ExpiredJwtException e) {
@@ -103,12 +76,12 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUsername(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public String resolveToken(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return authHeader;
     }
 
     public Authentication getAuthentication(String token) {
@@ -122,13 +95,11 @@ public class JwtTokenProvider {
         );
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        final String authHeader = request.getHeader(this.authHeader);
-
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7, authHeader.length());
-        }
-
-        return authHeader;
+    public String getUsername(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }

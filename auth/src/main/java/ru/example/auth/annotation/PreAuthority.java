@@ -1,6 +1,6 @@
 package ru.example.auth.annotation;
 
-import org.springframework.security.access.prepost.PreFilter;
+import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,9 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@PreFilter(
-        value = "filterObject != authentication.principal.username",
-        filterTarget = "usernames"
-)
-public @interface PreFilterUsernamesExceptCurrent {
+@PostAuthorize("hasAnyAuthority({'WRITE', 'ROLE_ADMIN', 'ROLE_USER'})")
+public @interface PreAuthority {
 }

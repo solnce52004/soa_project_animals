@@ -6,55 +6,45 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import ru.example.animals.dto.ResponseDTO;
+import ru.example.animals.exception.custom_exception.AnimalNotFoundException;
 import ru.example.animals.exception.custom_exception.BaseError;
-import ru.example.animals.exception.custom_exception.NotFoundAnimalException;
 import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
-import ru.example.animals.service.api.FindAnimalByIdApiService;
 
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class CustomApiExceptionHandler {
-    /**
-     * Будет вызван конструктор переопределенный в NotFoundAnimalException
-     * а после обработки перейдет сюда и будут добавлены сообщения в ответ
-     */
-    @ExceptionHandler(NotFoundAnimalException.class)
-    public ResponseEntity<Object> customHandleNotFound(
-            NotFoundAnimalException ex,
+
+    @ExceptionHandler(AnimalNotFoundException.class)
+    public ResponseEntity<Object> handleAnimalNotFoundException(
+            AnimalNotFoundException ex,
             WebRequest request
     ) {
-        BaseError error = new BaseError()
-                .setTimestamp(LocalDateTime.now())
-                .setHttpStatus(HttpStatus.NOT_FOUND.value())
-                .setHttpStatusName(HttpStatus.NOT_FOUND)
-                .setMessage(ex.getMessage());
-
-        ResponseDTO responseDTO = new ResponseDTO()
-                .setInfo(FindAnimalByIdApiService.CODE_404)
-                .setError(error)
-//                .setAnimals(Collections.singleton(new AnimalDTO()))
-                .setHttpStatus(HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.NOT_FOUND);
+        return getResponseEntity(HttpStatus.NOT_FOUND, ex);
     }
 
     @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<Object> customHandleNotFound(
+    public ResponseEntity<Object> handleUserUnauthorizedException(
             UserUnauthorizedException ex,
             WebRequest request
     ) {
+        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
+    }
+
+    private ResponseEntity<Object> getResponseEntity(
+            HttpStatus httpStatus,
+            RuntimeException ex
+    ) {
         BaseError error = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
-                .setHttpStatusName(HttpStatus.UNAUTHORIZED)
-                .setMessage(ex.getMessage());
+                .setMessage(ex.getMessage())
+                .setHttpStatus(httpStatus.value())
+                .setHttpStatusName(httpStatus);
 
         ResponseDTO responseDTO = new ResponseDTO()
-                .setInfo(FindAnimalByIdApiService.CODE_401)
                 .setError(error)
-                .setHttpStatus(HttpStatus.UNAUTHORIZED);
+                .setHttpStatus(httpStatus);
 
-        return new ResponseEntity<>(responseDTO, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(responseDTO, httpStatus);
     }
 }

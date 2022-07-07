@@ -55,15 +55,6 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
-    public static UserDetailsImpl create(
-            User user,
-            Map<String, Object> attributes
-    ) {
-        UserDetailsImpl userPrincipal = UserDetailsImpl.create(user);
-        userPrincipal.setAttributes(attributes);
-        return userPrincipal;
-    }
-
     public Long getId() {
         return id;
     }
@@ -102,15 +93,4 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return isActive;
     }
-
-//    public static UserDetails fromUser(User user) {
-//        return new org.springframework.security.core.userdetails.User(
-//                user.getUsername(),
-//                user.getPassword(),
-//                user.getAuthorities()
-//                        .stream()
-//                        .map(SimpleGrantedAuthority::new)
-//                        .collect(Collectors.toSet())
-//        );
-//    }
 }

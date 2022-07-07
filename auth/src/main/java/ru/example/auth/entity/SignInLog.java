@@ -11,7 +11,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "sign_in_logs")
+@Table(name = "sign_in_logs", catalog = "auth_db", schema = "public")
+@Entity
 @NoArgsConstructor
 @Getter
 @Setter
@@ -19,7 +20,7 @@ import java.util.Date;
 @ToString(exclude = {"id"})
 @DynamicUpdate
 @DynamicInsert
-public class SignInLog  implements Serializable {
+public class SignInLog implements Serializable {
     private static final Long serialVersionUID = 223L;
 
     @Id

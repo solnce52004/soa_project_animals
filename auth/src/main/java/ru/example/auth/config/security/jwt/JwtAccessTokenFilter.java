@@ -19,8 +19,8 @@ import java.io.PrintWriter;
 
 @Component
 @AllArgsConstructor
-public class JwtTokenFilter extends GenericFilterBean {
-    private final JwtTokenProvider jwtTokenProvider;
+public class JwtAccessTokenFilter extends GenericFilterBean {
+    private final JwtAccessTokenProvider jwtAccessTokenProvider;
 
     @Override
     public void doFilter(
@@ -29,13 +29,13 @@ public class JwtTokenFilter extends GenericFilterBean {
             FilterChain chain
     ) throws IOException, ServletException {
         //вытащили из запроса по тайному названию хэдера - токен
-        final String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        final String token = jwtAccessTokenProvider.resolveToken((HttpServletRequest) request);
 
         try {
             // проверили, что не протух
-            if (token != null && jwtTokenProvider.validateToken(token)) {
+            if (token != null && jwtAccessTokenProvider.validateToken(token)) {
 
-                final Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                final Authentication authentication = jwtAccessTokenProvider.getAuthentication(token);
                 if (authentication != null) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }

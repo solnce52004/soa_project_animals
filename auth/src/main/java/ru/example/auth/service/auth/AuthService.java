@@ -9,9 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.example.auth.config.security.jwt.JwtTokenProvider;
-import ru.example.auth.dto.AuthRequestDTO;
+import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
+import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.dto.UserDTO;
+import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.entity.User;
 import ru.example.auth.exception.custom_exception.RegistrationException;
@@ -26,9 +27,10 @@ import java.util.stream.Collectors;
 @Log4j2
 public class AuthService {
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessTokenProvider jwtAccessTokenProvider;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private final AccessTokenService accessTokenService;
 
 //    public boolean isAuthenticated() {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -38,7 +40,7 @@ public class AuthService {
 //        return authentication.isAuthenticated();
 //    }
 
-    public UserDTO registerAnonymous(UserDTO userDTO) {
+    public void checkIfExistsUsername(UserDTO userDTO) {
         User userExist = userService
                 .findByUsername(userDTO.getUsername())
                 .orElse(null);
@@ -46,27 +48,20 @@ public class AuthService {
         if (userExist != null) {
             throw new RegistrationException("Username already registered");
         }
-
-        final String token = jwtTokenProvider.createVerifyToken(
-                userDTO.getUsername(),
-                userDTO.getPassword());
-
-        final User user = new User()
-                .setUsername(userDTO.getUsername())
-                .setPassword(userDTO.getPassword())
-                .setToken(token);
-
-        final User anonymous = userService.createAnonymousRead(user);
-
-        return new UserDTO()
-                .setUsername(anonymous.getUsername())
-                .setToken(token);
     }
 
-    public UserDTO loginUser(AuthRequestDTO requestDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
+        userService.createUser(new User()
+                .setUsername(userDTO.getUsername())
+                .setPassword(userDTO.getPassword()));
+
+        return loginUser(userDTO);
+    }
+
+    public UserDTO loginUser(UserDTO userDTO) {
         final UsernamePasswordAuthenticationToken requestToken = new UsernamePasswordAuthenticationToken(
-                requestDTO.getUsername(),
-                requestDTO.getPassword()
+                userDTO.getUsername(),
+                userDTO.getPassword()
         );
         final Authentication authentication = authenticationManager.authenticate(requestToken);
 
@@ -75,20 +70,17 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        final User user = userService.findByUsername(requestDTO.getUsername())
+        final User user = userService.findByUsername(userDTO.getUsername())
                 .orElseThrow(UserNotFoundException::new);
 
-        final String token = jwtTokenProvider.createToken(
-                requestDTO.getUsername(),
-                requestDTO.getPassword()
-        );
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+        final AccessToken accessToken = accessTokenService.createToken(user);
+        final RefreshToken refreshToken = refreshTokenService.createToken(user);
+
         autoLogin(requestToken, user.getUsername());
 
         return new UserDTO()
                 .setUsername(user.getUsername())
-                .setToken(token)
-                .setExpiryDate(refreshToken.getExpiryDate())
+                .setAccessToken(accessToken)
                 .setRefreshToken(refreshToken)
                 .setRoles(authorities);
     }
@@ -99,5 +91,10 @@ public class AuthService {
 
             log.debug(String.format("Auto login %s successfully!", username));
         }
+    }
+
+    public void logout(TokenInfoDTO tokenInfo) {
+        accessTokenService.deleteToken(tokenInfo.getAccessToken());
+        refreshTokenService.deleteToken(tokenInfo.getRefreshToken());
     }
 }

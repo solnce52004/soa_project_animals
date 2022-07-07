@@ -1,6 +1,7 @@
 package ru.example.animals.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalTypeDTO implements Serializable {
     @JsonIgnore
     @Transient
@@ -45,10 +46,16 @@ public final class AnimalTypeDTO implements Serializable {
         this.title = title;
     }
 
-    public static AnimalTypeDTO animalMapToDto(AnimalType animal) {
+    public static AnimalType dtoMapToAnimalType(AnimalTypeDTO type) {
+        return new AnimalType()
+                .setId(type.getId())
+                .setTitle(type.getTitle());
+    }
+
+    public static AnimalTypeDTO animalTypeMapToDto(AnimalType type) {
         return new AnimalTypeDTO(
-                animal.getId(),
-                animal.getTitle()
+                type.getId(),
+                type.getTitle()
         );
     }
 }

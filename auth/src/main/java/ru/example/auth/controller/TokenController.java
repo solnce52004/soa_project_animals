@@ -1,55 +1,85 @@
 package ru.example.auth.controller;
 
 
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.example.auth.dto.ResponseDTO;
 import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.dto.UserDTO;
-import ru.example.auth.entity.User;
+import ru.example.auth.service.auth.AccessTokenService;
 import ru.example.auth.service.auth.RefreshTokenService;
-import ru.example.auth.service.auth.VerifyTokenService;
 
 import javax.validation.Valid;
 
-@Controller
+@Api(tags = "Token info", value = "TokenController")
+@RestController
 @RequestMapping("/api/v1/")
-@Log4j2
 @AllArgsConstructor
 public class TokenController {
-    private final VerifyTokenService verifyTokenService;
+    private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
 
+    @Operation(method = "POST",
+            description = "Verify AccessToken",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "AccessToken is valid",
+                            content = {@Content(schema = @Schema(
+                                    implementation = ResponseDTO.class))}),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token is invalid",
+                            content = {@Content(schema = @Schema(
+                                    implementation = ResponseDTO.class))})})
     @PostMapping("/verify/token")
-    public ResponseEntity<ResponseDTO> verifyToken(
+    public ResponseEntity<ResponseDTO> verifyAccessToken(
             @Valid @RequestBody TokenInfoDTO tokenInfo
     ) {
-        final User user = verifyTokenService.verifyUserAccessToken(tokenInfo.getAccessToken());
+        final TokenInfoDTO verified = accessTokenService.process(tokenInfo);
 
         final UserDTO verifiedUser = new UserDTO()
-                .setToken(user.getToken())
-                .setExpiryDate(user.getExpiryDate());
+                .setAccessToken(verified.getAccessToken());
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setUser(verifiedUser)
                 .setHttpStatus(HttpStatus.OK));
     }
 
+    @Operation(method = "POST",
+            description = "Refresh Token",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Token Refresh was successful",
+                            content = {@Content(schema = @Schema(
+                                    implementation = ResponseDTO.class))}),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token is invalid",
+                            content = {@Content(schema = @Schema(
+                                    implementation = ResponseDTO.class))})})
     @PostMapping("/refresh-token")
+    @Secured({"ROLE_USER"})
     public ResponseEntity<ResponseDTO> refreshToken(
             @Valid @RequestBody TokenInfoDTO tokenInfo
     ) {
-        final TokenInfoDTO refreshInfo = refreshTokenService.getRefreshTokenInfo(tokenInfo);
+        final TokenInfoDTO refreshed = refreshTokenService.process(tokenInfo);
 
         final UserDTO refreshedUser = new UserDTO()
-                .setToken(refreshInfo.getAccessToken())
-                .setExpiryDate(refreshInfo.getRefreshToken().getExpiryDate());
+                .setAccessToken(refreshed.getAccessToken())
+                .setRefreshToken(refreshed.getRefreshToken());
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setUser(refreshedUser)

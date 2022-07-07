@@ -30,12 +30,20 @@ public class CustomApiExceptionHandler {
         return getResponseEntity(HttpStatus.FORBIDDEN, ex);
     }
 
-    @ExceptionHandler(TokenRefreshException.class)
-    public ResponseEntity<Object> handleTokenRefreshException(
-            TokenRefreshException ex,
+    @ExceptionHandler(AccessTokenException.class)
+    public ResponseEntity<Object> handleAccessTokenException(
+            AccessTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.FORBIDDEN, ex);
+        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
+    }
+
+    @ExceptionHandler(RefreshTokenException.class)
+    public ResponseEntity<Object> handleTokenRefreshException(
+            RefreshTokenException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -54,14 +62,6 @@ public class CustomApiExceptionHandler {
         return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
     }
 
-    @ExceptionHandler(TokenInvalidException.class)
-    public ResponseEntity<Object> handleTokenInvalidException(
-            TokenInvalidException ex,
-            WebRequest request
-    ) {
-        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
-    }
-
     @ExceptionHandler(TooManySignInAttemptsException.class)
     public ResponseEntity<Object> handleTooManySignInAttemptsException(
             TooManySignInAttemptsException ex,
@@ -70,7 +70,6 @@ public class CustomApiExceptionHandler {
         return getResponseEntity(HttpStatus.FORBIDDEN, ex);
     }
 
-    //////
     private ResponseEntity<Object> getResponseEntity(
             HttpStatus httpStatus,
             RuntimeException ex

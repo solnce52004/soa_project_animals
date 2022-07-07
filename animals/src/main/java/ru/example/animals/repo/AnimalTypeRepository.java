@@ -14,5 +14,5 @@ public interface AnimalTypeRepository extends JpaRepository<AnimalType, Long> {
             value = "animal-type",
             type = EntityGraph.EntityGraphType.LOAD)
     @Override
-    Optional<AnimalType> findById(final Long aLong);
+    Optional<AnimalType> findById(final Long id);
 }

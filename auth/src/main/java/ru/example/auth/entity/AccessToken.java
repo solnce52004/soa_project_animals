@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.Instant;
 
-@Table(name = "refresh_tokens", catalog = "auth_db", schema = "public")
+@Table(name = "access_tokens", catalog = "auth_db", schema = "public")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +19,7 @@ import java.time.Instant;
 @ToString(exclude = {"id", "user"})
 @DynamicUpdate
 @DynamicInsert
-public class RefreshToken {
+public class AccessToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -28,8 +28,8 @@ public class RefreshToken {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "refresh_token_data", nullable = false, unique = true)
-    private String refreshTokenData;
+    @Column(name = "access_token_data", nullable = false, unique = true)
+    private String accessTokenData;
 
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;

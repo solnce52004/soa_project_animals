@@ -42,7 +42,6 @@ signin:
 #  expiration: 60000
 #  refresh: 120000
 
-
 ---
 #DEV
 spring:

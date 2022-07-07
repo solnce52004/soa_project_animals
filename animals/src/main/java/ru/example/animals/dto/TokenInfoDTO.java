@@ -1,17 +1,14 @@
-package ru.example.auth.dto;
+package ru.example.animals.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import ru.example.auth.entity.AccessToken;
-import ru.example.auth.entity.RefreshToken;
 
 @NoArgsConstructor
 @Accessors(chain = true)
 @Data
 final public class TokenInfoDTO {
     private String username;
-    private AccessToken accessToken;
-    private RefreshToken refreshToken;
+    private AccessTokenDTO accessToken;
     private String tokenType = "Bearer";
 }

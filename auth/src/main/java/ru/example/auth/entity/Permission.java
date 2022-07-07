@@ -13,7 +13,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "permissions")
+@Table(name = "permissions", catalog = "auth_db", schema = "public")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

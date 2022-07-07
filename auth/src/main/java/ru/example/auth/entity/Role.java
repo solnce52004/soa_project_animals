@@ -12,7 +12,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "roles")
+@Table(name = "roles", catalog = "auth_db", schema = "public")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

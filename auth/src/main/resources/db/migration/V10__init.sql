@@ -6,9 +6,6 @@ CREATE TABLE IF NOT EXISTS "auth_db"."public"."users"
             PRIMARY KEY,
     "username" VARCHAR(255) DEFAULT 'GUEST'::VARCHAR NOT NULL,
     "password" VARCHAR(255),
-    "status" VARCHAR(255) DEFAULT 'ACTIVE'::VARCHAR NOT NULL,
-    "token" VARCHAR(255),
-    "reset_token" VARCHAR(255),
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -26,9 +23,6 @@ ALTER TABLE IF EXISTS ONLY "auth_db"."public"."users"
 
 CREATE UNIQUE INDEX IF NOT EXISTS "users_username_uindex"
     ON "auth_db"."public"."users" ("username");
-CREATE UNIQUE INDEX IF NOT EXISTS "users_token_uindex"
-    ON "auth_db"."public"."users" ("token");
-
 
 CREATE OR REPLACE FUNCTION "add_comments"()
     RETURNS VOID AS

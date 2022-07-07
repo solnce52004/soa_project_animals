@@ -16,8 +16,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Table(name = "animal_types", catalog = "auth_db", schema = "public")
 @Entity
-@Table(name = "animal_types")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -43,7 +43,7 @@ import java.util.Set;
 public class AnimalType {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "title", nullable = false, unique = true)

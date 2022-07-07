@@ -16,8 +16,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+@Table(name = "animals", catalog = "auth_db", schema = "public")
 @Entity
-@Table(name = "animals")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,13 +28,11 @@ import java.util.Objects;
 public class Animal {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @Fetch(value = FetchMode.JOIN)
-    private User user = new User();
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "animal_type_id", nullable = false)

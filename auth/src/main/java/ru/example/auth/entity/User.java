@@ -6,21 +6,22 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.*;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.auth.converter.UserPasswordAttributeConverter;
-import ru.example.auth.enums.UserStatusEnum;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "users")
+@Table(name = "users", catalog = "auth_db", schema = "public")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(exclude = {"id", "roles"})
 @ToString(exclude = {"id", "roles"})
@@ -31,7 +32,7 @@ public class User implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "username", nullable = false)
@@ -42,33 +43,30 @@ public class User implements Serializable {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST //не будем удалять роль при удалении юзера
-    )
+            cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     @Fetch(value = FetchMode.JOIN)
     private Set<Role> roles = new HashSet<>();
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private String status = UserStatusEnum.NOT_CONFIRMED.name();
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id", referencedColumnName = "user_id")
+    private AccessToken accessToken;
 
-    @Column(name = "token")
-    private String token;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id", referencedColumnName = "user_id")
+    private RefreshToken refreshToken;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "expiry_date", nullable = false, columnDefinition = "TIMESTAMP")
-    private Instant expiryDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @org.hibernate.annotations.Generated(GenerationTime.ALWAYS)
-    @Column(name="created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP")
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
-    @Column(name="updated_at", insertable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP")
     private Date updatedAt;
 
     /**
@@ -79,7 +77,7 @@ public class User implements Serializable {
     @Transactional
     public Set<String> getAuthorities() {
         Set<String> authorities = new HashSet<>();
-        for (Role role : getRoles()) {
+        for (Role role : this.getRoles()) {
             authorities.add(role.getTitle());
             for (Permission permission : role.getPermissions()) {
                 authorities.add(permission.getTitle());
@@ -87,13 +85,5 @@ public class User implements Serializable {
         }
 
         return authorities;
-    }
-
-    public User(
-            String username,
-            String password
-    ) {
-        this.username = username;
-        this.password = password;
     }
 }
