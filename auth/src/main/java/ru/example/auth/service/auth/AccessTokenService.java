@@ -31,15 +31,15 @@ public class AccessTokenService implements TokenService<AccessToken> {
     }
 
     @Override
-    public TokenInfoDTO process(String tokenData) {
-        if (tokenData == null || tokenData.isEmpty()) {
-            throw new AccessTokenException("Token is empty");
+    public TokenInfoDTO process(String tokenValue) {
+        if (tokenValue == null || tokenValue.isEmpty()) {
+            throw new AccessTokenException("Access-token is empty");
         }
 
-        final AccessToken currentAccessToken = findByToken(tokenData)
+        final AccessToken currentAccessToken = findByToken(tokenValue)
                 .orElseThrow(() -> new AccessTokenException("Access-token is missing from the database"));
 
-        final String accessToken = currentAccessToken.getAccessTokenData();
+        final String accessToken = currentAccessToken.getToken();
         if (accessToken == null || !jwtAccessTokenProvider.validateToken(accessToken)) {
             throw new AccessTokenException("Token is invalid");
         }
@@ -56,13 +56,13 @@ public class AccessTokenService implements TokenService<AccessToken> {
 
     @Override
     public Optional<AccessToken> findByToken(String token) {
-        return accessTokenRepository.findByAccessTokenData(token);
+        return accessTokenRepository.findByToken(token);
     }
 
     @Override
     public AccessToken verifyExpiration(AccessToken token) {
         if (token.getExpiresAt().compareTo(Instant.now()) < 0) {
-            deleteToken(token.getAccessTokenData());
+            deleteToken(token.getToken());
             throw new AccessTokenException("Access token was expired and deleted");
         }
         return token;
@@ -76,20 +76,20 @@ public class AccessTokenService implements TokenService<AccessToken> {
         }
         return accessTokenRepository.save(
                 byUser
-                        .setAccessTokenData(getTokenData(user))
+                        .setToken(getTokenValue(user))
                         .setExpiresAt(getNewExpiresAt()));
     }
 
     @Override
-    public String getTokenData(User user) {
+    public String getTokenValue(User user) {
         return jwtAccessTokenProvider.createAccessToken(
                 user.getUsername(),
                 user.getPassword());
     }
 
     @Override
-    public void deleteToken(String tokenData) {
-        accessTokenRepository.deleteByAccessTokenData(tokenData);
+    public void deleteToken(String tokenValue) {
+        accessTokenRepository.deleteByToken(tokenValue);
     }
 
     @Override

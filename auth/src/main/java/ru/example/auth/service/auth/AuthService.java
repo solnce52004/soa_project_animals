@@ -85,7 +85,7 @@ public class AuthService {
     }
 
     public void logout(LogoutRequestDTO logoutRequestDTO) {
-        accessTokenService.deleteToken(logoutRequestDTO.getAccessTokenData());
-        refreshTokenService.deleteToken(logoutRequestDTO.getRefreshTokenData());
+        accessTokenService.deleteToken(logoutRequestDTO.getAccessToken());
+        refreshTokenService.deleteToken(logoutRequestDTO.getRefreshToken());
     }
 }

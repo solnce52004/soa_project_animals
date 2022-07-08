@@ -109,6 +109,11 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "The animal is not unique",
+                            content = {@Content(schema = @Schema(
+                                    implementation = ResponseDTO.class))}),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(

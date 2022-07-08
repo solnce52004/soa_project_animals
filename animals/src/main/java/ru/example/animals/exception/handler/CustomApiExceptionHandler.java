@@ -50,7 +50,7 @@ public class CustomApiExceptionHandler {
             AnimalNotUniqueException ex,
             WebRequest request
     ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ResponseDTO> getResponseEntity(

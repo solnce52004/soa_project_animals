@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 public interface TokenService<T> {
-    TokenInfoDTO process(String tokenData);
+    TokenInfoDTO process(String tokenValue);
 
     Optional<T> findByToken(String token);
 
@@ -15,9 +15,9 @@ public interface TokenService<T> {
 
     T createToken(User user);
 
-    void deleteToken(String tokenData);
+    void deleteToken(String tokenValue);
 
-    String getTokenData(User user);
+    String getTokenValue(User user);
 
     Instant getNewExpiresAt();
 }

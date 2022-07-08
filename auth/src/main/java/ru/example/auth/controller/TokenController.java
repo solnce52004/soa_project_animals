@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
 import ru.example.auth.dto.TokenInfoDTO;
-import ru.example.auth.dto.request.RequestTokenDTO;
+import ru.example.auth.dto.request.RequestRefreshTokenDTO;
 import ru.example.auth.dto.response.ResponseDTO;
 import ru.example.auth.dto.response.ResponseTokenDTO;
 import ru.example.auth.service.auth.AccessTokenService;
 import ru.example.auth.service.auth.RefreshTokenService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Api(tags = "Token info", value = "TokenController")
@@ -30,6 +32,7 @@ import javax.validation.Valid;
 public class TokenController {
     private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final JwtAccessTokenProvider jwtAccessTokenProvider;
 
     @Operation(method = "POST",
             description = "Verify AccessToken",
@@ -46,10 +49,10 @@ public class TokenController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/verify/token")
     public ResponseEntity<ResponseDTO> verifyAccessToken(
-            @RequestBody RequestTokenDTO requestTokenDTO
+            HttpServletRequest request
     ) {
         TokenInfoDTO tokenInfoDTO = accessTokenService.process(
-                    requestTokenDTO.getTokenData());
+                jwtAccessTokenProvider.resolveToken(request));
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setUsername(tokenInfoDTO.getUsername())
@@ -72,10 +75,10 @@ public class TokenController {
     @PostMapping("/refresh-token")
     @Secured({"ROLE_USER"})
     public ResponseEntity<ResponseTokenDTO> refreshToken(
-            @Valid @RequestBody RequestTokenDTO requestTokenDTO
+            @Valid @RequestBody RequestRefreshTokenDTO requestRefreshTokenDTO
     ) {
         final TokenInfoDTO refreshed = refreshTokenService.process(
-                requestTokenDTO.getTokenData());
+                requestRefreshTokenDTO.getRefreshToken());
 
         return ResponseEntity.ok(new ResponseTokenDTO()
                 .setAccessToken(refreshed.getAccessToken())

@@ -9,10 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import ru.example.animals.dto.request.RequestVerifyTokenDTO;
 import ru.example.animals.dto.response.ResponseDTO;
 import ru.example.animals.exception.custom_exception.VerifyTokenException;
 
@@ -22,6 +20,7 @@ import java.util.Collections;
 @Slf4j
 @Service
 public class VerifyAccessTokenService {
+    private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
     private final String authUrlVerifyToken;
 
     @Autowired
@@ -31,13 +30,11 @@ public class VerifyAccessTokenService {
     }
 
     public String verifyRequest(HttpServletRequest request) {
-        final String accessTokenData = resolveToken(request);
-        final RequestVerifyTokenDTO requestVerifyTokenDTO = new RequestVerifyTokenDTO().setTokenData(accessTokenData);
-
         HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_NAME_AUTHORIZATION, request.getHeader(HEADER_NAME_AUTHORIZATION));
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<RequestVerifyTokenDTO> requestToken = new HttpEntity<>(requestVerifyTokenDTO, headers);
+        HttpEntity<Object> requestToken = new HttpEntity<>(headers);
 
         ResponseEntity<ResponseDTO> response;
         try {
@@ -57,14 +54,6 @@ public class VerifyAccessTokenService {
         }
 
         return response.getBody().getUsername();
-    }
-
-    private static String resolveToken(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return authHeader;
     }
 
     //403!!!

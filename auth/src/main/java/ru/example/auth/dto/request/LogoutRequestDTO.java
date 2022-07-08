@@ -18,6 +18,6 @@ public class LogoutRequestDTO implements Serializable {
     @Transient
     private static final long serialVersionUID = 1456567L;
 
-    private String accessTokenData;
-    private String refreshTokenData;
+    private String accessToken;
+    private String refreshToken;
 }

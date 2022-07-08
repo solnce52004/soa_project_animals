@@ -12,9 +12,9 @@ public interface AccessTokenRepository  extends JpaRepository<AccessToken, Long>
     @Override
     Optional<AccessToken> findById(Long id);
 
-    Optional<AccessToken> findByAccessTokenData(String accessTokenData);
+    Optional<AccessToken> findByToken(String token);
 
     AccessToken findByUserId(Long id);
 
-    void deleteByAccessTokenData(String accessTokenData);
+    void deleteByToken(String token);
 }

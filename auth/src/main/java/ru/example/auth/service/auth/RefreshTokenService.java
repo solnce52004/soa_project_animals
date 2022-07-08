@@ -33,8 +33,12 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
     }
 
     @Override
-    public TokenInfoDTO process(String tokenData) {
-        final RefreshToken currentRefreshToken = findByToken(tokenData)
+    public TokenInfoDTO process(String tokenValue) {
+        if (tokenValue == null || tokenValue.isEmpty()) {
+            throw new RefreshTokenException("Refresh-token is empty");
+        }
+
+        final RefreshToken currentRefreshToken = findByToken(tokenValue)
                 .orElseThrow(() -> new RefreshTokenException("Refresh-token is missing from the database"));
 
         final User user = verifyExpiration(currentRefreshToken).getUser();
@@ -53,13 +57,13 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
 
     @Override
     public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByRefreshTokenData(token);
+        return refreshTokenRepository.findByToken(token);
     }
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().compareTo(Instant.now()) < 0) {
-            deleteToken(token.getRefreshTokenData());
+            deleteToken(token.getToken());
             throw new RefreshTokenException("Refresh token was expired and deleted");
         }
         return token;
@@ -73,17 +77,17 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
         }
         return refreshTokenRepository.save(
                 byUser
-                        .setRefreshTokenData(getTokenData(user))
+                        .setToken(getTokenValue(user))
                         .setExpiresAt(getNewExpiresAt()));
     }
 
     @Override
-    public void deleteToken(String tokenData) {
-        refreshTokenRepository.deleteByRefreshTokenData(tokenData);
+    public void deleteToken(String tokenValue) {
+        refreshTokenRepository.deleteByToken(tokenValue);
     }
 
     @Override
-    public String getTokenData(User user) {
+    public String getTokenValue(User user) {
         return UUID.randomUUID().toString();
     }
 
