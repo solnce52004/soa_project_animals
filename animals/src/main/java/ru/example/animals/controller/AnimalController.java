@@ -20,9 +20,9 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Set;
 
-@Api(tags = "Find animal by id", value = "AnimalController")
+@Api(tags = "Managing animal entities", value = "AnimalController")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/animal")
 @AllArgsConstructor
 public class AnimalController {
     private final AnimalService animalService;
@@ -46,7 +46,7 @@ public class AnimalController {
                             description = "Animals was not found",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
-    @GetMapping("/username/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<ResponseDTO> findAllAnimalsByUsername(
             @PathVariable("username") String username,
             HttpServletRequest request
@@ -131,7 +131,7 @@ public class AnimalController {
                 .setHttpStatus(HttpStatus.CREATED));
     }
 
-    @Operation(method = "PATCH",
+    @Operation(method = "Patch animal info",
             description = "Update some animal data",
             responses = {
                     @ApiResponse(
@@ -145,7 +145,7 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseDTO> updateAnimal(
+    public ResponseEntity<ResponseDTO> patchAnimalById(
             @PathVariable("id") Long animalId,
             @Valid @RequestBody AnimalDTO animalDTO,
             HttpServletRequest request
@@ -203,7 +203,7 @@ public class AnimalController {
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
-    @PutMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO> deleteAnimal(
             @PathVariable("id") Long animalId,
             HttpServletRequest request

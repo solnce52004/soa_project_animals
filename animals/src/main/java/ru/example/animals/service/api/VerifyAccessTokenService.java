@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.example.animals.dto.request.RequestVerifyTokenDTO;
@@ -30,7 +31,7 @@ public class VerifyAccessTokenService {
     }
 
     public String verifyRequest(HttpServletRequest request) {
-        final String accessTokenData = request.getHeader("Bearer");
+        final String accessTokenData = resolveToken(request);
         final RequestVerifyTokenDTO requestVerifyTokenDTO = new RequestVerifyTokenDTO().setTokenData(accessTokenData);
 
         HttpHeaders headers = new HttpHeaders();
@@ -56,6 +57,14 @@ public class VerifyAccessTokenService {
         }
 
         return response.getBody().getUsername();
+    }
+
+    private static String resolveToken(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return authHeader;
     }
 
     //403!!!
