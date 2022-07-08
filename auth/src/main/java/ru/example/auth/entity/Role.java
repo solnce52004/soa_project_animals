@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.internal.util.stereotypes.Immutable;
+import ru.example.auth.enums.RoleEnum;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.util.Set;
 @DynamicUpdate
 @DynamicInsert
 public class Role implements Serializable {
+    @Transient
     private static final Long serialVersionUID = 1L;
 
     @Id
@@ -32,7 +34,7 @@ public class Role implements Serializable {
 
     @Immutable
     @Column(name = "title", nullable = false)
-    private String title;
+    private String title = RoleEnum.ROLE_USER.name();
 
     @ManyToMany(
             fetch = FetchType.LAZY,

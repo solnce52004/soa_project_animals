@@ -1,11 +1,14 @@
 package ru.example.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Table(name = "refresh_tokens", catalog = "auth_db", schema = "public")
@@ -19,11 +22,17 @@ import java.time.Instant;
 @ToString(exclude = {"id", "user"})
 @DynamicUpdate
 @DynamicInsert
-public class RefreshToken {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class RefreshToken implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 45667L;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

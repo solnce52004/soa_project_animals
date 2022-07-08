@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.auth.dto.ResponseDTO;
 import ru.example.auth.dto.TokenInfoDTO;
-import ru.example.auth.dto.UserDTO;
+import ru.example.auth.dto.request.RequestTokenDTO;
+import ru.example.auth.dto.response.ResponseDTO;
+import ru.example.auth.dto.response.ResponseTokenDTO;
 import ru.example.auth.service.auth.AccessTokenService;
 import ru.example.auth.service.auth.RefreshTokenService;
 
@@ -45,15 +46,23 @@ public class TokenController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/verify/token")
     public ResponseEntity<ResponseDTO> verifyAccessToken(
-            @Valid @RequestBody TokenInfoDTO tokenInfo
+            @RequestBody RequestTokenDTO requestTokenDTO
     ) {
-        final TokenInfoDTO verified = accessTokenService.process(tokenInfo);
+        TokenInfoDTO tokenInfoDTO;
+//        try{
 
-        final UserDTO verifiedUser = new UserDTO()
-                .setAccessToken(verified.getAccessToken());
+            tokenInfoDTO = accessTokenService.process(
+                    requestTokenDTO.getTokenData());
+
+//        }catch (RuntimeException ex){
+//            return new ResponseEntity<>(
+//                    new ResponseDTO()
+//                            .setError(new BaseError().setDetailMessage(ex.getMessage())),
+//                    HttpStatus.FORBIDDEN);
+//        }
 
         return ResponseEntity.ok(new ResponseDTO()
-                .setUser(verifiedUser)
+                .setUsername(tokenInfoDTO.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
 
@@ -72,17 +81,16 @@ public class TokenController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/refresh-token")
     @Secured({"ROLE_USER"})
-    public ResponseEntity<ResponseDTO> refreshToken(
-            @Valid @RequestBody TokenInfoDTO tokenInfo
+    public ResponseEntity<ResponseTokenDTO> refreshToken(
+            @Valid @RequestBody RequestTokenDTO requestTokenDTO
     ) {
-        final TokenInfoDTO refreshed = refreshTokenService.process(tokenInfo);
+        final TokenInfoDTO refreshed = refreshTokenService.process(
+                requestTokenDTO.getTokenData());
 
-        final UserDTO refreshedUser = new UserDTO()
+        return ResponseEntity.ok(new ResponseTokenDTO()
                 .setAccessToken(refreshed.getAccessToken())
-                .setRefreshToken(refreshed.getRefreshToken());
-
-        return ResponseEntity.ok(new ResponseDTO()
-                .setUser(refreshedUser)
+                .setRefreshToken(refreshed.getRefreshToken())
+                .setUsername(refreshed.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
 }

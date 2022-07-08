@@ -11,6 +11,8 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
 
     public Permission getPermissionByTitle(String title) {
-        return permissionRepository.getPermissionByTitle(title).orElse(null);
+        return permissionRepository
+                .getPermissionByTitle(title)
+                .orElse(new Permission());
     }
 }

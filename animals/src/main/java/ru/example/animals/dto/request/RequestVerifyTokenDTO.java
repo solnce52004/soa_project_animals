@@ -1,10 +1,10 @@
-package ru.example.animals.dto;
+package ru.example.animals.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AccessTokenDTO {
+public class RequestVerifyTokenDTO {
     private String accessTokenData;
 }

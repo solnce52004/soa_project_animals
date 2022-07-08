@@ -25,13 +25,13 @@ import java.util.Objects;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalDTO implements Serializable {
-    @JsonIgnore
     @Transient
     private static final long serialVersionUID = 112L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
     public static final String ERROR_MSG_NOT_VALID = "Invalid value";
 
+    @JsonIgnore
     private Long id;
     private String username;
     private AnimalTypeDTO animalType = new AnimalTypeDTO();
@@ -43,7 +43,6 @@ public final class AnimalDTO implements Serializable {
     private GenderType gender = GenderType.UNTITLED;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private Date birthdate;
-
 
     @Override
     public boolean equals(Object o) {
@@ -83,11 +82,9 @@ public final class AnimalDTO implements Serializable {
     }
 
     public static Animal dtoMapToAnimal(AnimalDTO animalDTO) {
-        final AnimalTypeDTO animalType = animalDTO.getAnimalType();
         return new Animal()
                 .setId(animalDTO.getId())
                 .setUsername(animalDTO.getUsername())
-                .setAnimalType(AnimalTypeDTO.dtoMapToAnimalType(animalType))
                 .setName(animalDTO.getName())
                 .setGender(animalDTO.getGender())
                 .setBirthdate(animalDTO.getBirthdate());

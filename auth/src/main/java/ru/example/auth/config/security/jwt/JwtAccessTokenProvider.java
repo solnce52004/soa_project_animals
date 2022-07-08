@@ -66,13 +66,13 @@ public class JwtAccessTokenProvider {
             return !claimsJws.getBody().getExpiration().before(new Date());
 
         } catch (MalformedJwtException e) {
-            throw new JwtAuthException("Invalid JWT token", e);
+            throw new JwtAuthException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new JwtAuthException("JWT token is expired", e);
+            throw new JwtAuthException("JWT token is expired");
         } catch (UnsupportedJwtException e) {
-            throw new JwtAuthException("JWT token is unsupported", e);
+            throw new JwtAuthException("JWT token is unsupported");
         } catch (IllegalArgumentException e) {
-            throw new JwtAuthException("JWT claims string is empty", e);
+            throw new JwtAuthException("JWT claims string is empty");
         }
     }
 

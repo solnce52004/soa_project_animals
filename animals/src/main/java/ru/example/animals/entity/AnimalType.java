@@ -12,9 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Table(name = "animal_types", catalog = "auth_db", schema = "public")
 @Entity
@@ -25,21 +23,6 @@ import java.util.Set;
 @Accessors(chain = true)
 @DynamicUpdate
 @DynamicInsert
-@NamedEntityGraph(
-        name = "animal-type",
-        attributeNodes = {
-                @NamedAttributeNode("id"),
-                @NamedAttributeNode(value = "animals", subgraph = "animals-subgraph"),
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "animals-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("animalType")
-                        }
-                )
-        }
-)
 public class AnimalType {
     @Id
     @Column(name = "id", nullable = false)
@@ -48,10 +31,6 @@ public class AnimalType {
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
-
-    @OneToMany(mappedBy = "animalType", fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.JOIN)
-    private Set<Animal> animals = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)

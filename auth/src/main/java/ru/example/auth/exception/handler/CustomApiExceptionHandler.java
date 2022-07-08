@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import ru.example.auth.dto.ResponseDTO;
 import ru.example.auth.exception.custom_exception.*;
 
 import java.time.LocalDateTime;
@@ -15,75 +14,71 @@ import java.time.LocalDateTime;
 public class CustomApiExceptionHandler {
 
     @ExceptionHandler(JwtAuthException.class)
-    public ResponseEntity<?> handleJwtAuthException(
+    public ResponseEntity<BaseError> handleJwtAuthException(
             JwtAuthException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.FORBIDDEN, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<?> handleRegistrationException(
+    public ResponseEntity<BaseError> handleRegistrationException(
             RegistrationException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.FORBIDDEN, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(AccessTokenException.class)
-    public ResponseEntity<Object> handleAccessTokenException(
+    public ResponseEntity<BaseError> handleAccessTokenException(
             AccessTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(RefreshTokenException.class)
-    public ResponseEntity<Object> handleTokenRefreshException(
+    public ResponseEntity<BaseError> handleTokenRefreshException(
             RefreshTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(
+    public ResponseEntity<BaseError> handleUserNotFoundException(
             UserNotFoundException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.NOT_FOUND, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<Object> handleUserUnauthorizedException(
+    public ResponseEntity<BaseError> handleUserUnauthorizedException(
             UserUnauthorizedException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.UNAUTHORIZED, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TooManySignInAttemptsException.class)
-    public ResponseEntity<Object> handleTooManySignInAttemptsException(
+    public ResponseEntity<BaseError> handleTooManySignInAttemptsException(
             TooManySignInAttemptsException ex,
             WebRequest request
     ) {
-        return getResponseEntity(HttpStatus.FORBIDDEN, ex);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<Object> getResponseEntity(
-            HttpStatus httpStatus,
-            RuntimeException ex
+    private ResponseEntity<BaseError> getResponseEntity(
+            String exMsg,
+            HttpStatus httpStatus
     ) {
         BaseError error = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage(ex.getMessage())
+                .setDetailMessage(exMsg)
                 .setHttpStatus(httpStatus.value())
                 .setHttpStatusName(httpStatus);
 
-        ResponseDTO responseDTO = new ResponseDTO()
-                .setError(error)
-                .setHttpStatus(httpStatus);
-
-        return new ResponseEntity<>(responseDTO, httpStatus);
+        return new ResponseEntity<>(error, httpStatus);
     }
 }

@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/swagger-ui/**").permitAll()
-                //проверить доступность имени через сервис (валидации)
+                .antMatchers("/auth/error/**").permitAll()
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/validate/username", HttpMethod.POST.name()).getPattern()).permitAll()
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/registration", HttpMethod.POST.name()).getPattern()).permitAll()
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/login", HttpMethod.POST.name()).getPattern()).permitAll()//max 10 за 1 час
@@ -54,7 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/verify/token", HttpMethod.POST.name()).getPattern()).authenticated()
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/refresh-token", HttpMethod.POST.name()).getPattern()).authenticated()
                 .antMatchers(new AntPathRequestMatcher("/auth/api/v1/logout", HttpMethod.POST.name()).getPattern()).authenticated()
-                .antMatchers("/api/v1/users/*").authenticated()
                 .and()
 
                 .exceptionHandling()

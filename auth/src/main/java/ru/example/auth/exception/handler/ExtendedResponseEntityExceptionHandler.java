@@ -37,7 +37,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage(ex.getMessage())
+                .setDetailMessage(ex.getMessage())
                 .setHttpStatus(status.value())
                 .setErrors(
                         new MapperErrorFieldsByMethodArgumentNotValid()
@@ -63,7 +63,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage("(NoHandlerFoundException) The handler for the request method was not found")
+                .setDetailMessage("(NoHandlerFoundException) The handler for the request method was not found")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
 
@@ -96,7 +96,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage(String.format(
+                .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpRequestMethodNotSupportedException) Type method",
                         allowed,
@@ -125,7 +125,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage("ServletRequestBindingException")
+                .setDetailMessage("ServletRequestBindingException")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
 
@@ -157,7 +157,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setMessage(String.format(
+                .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpMediaTypeNotSupportedException) (Media) Content-Type",
                         allowed,

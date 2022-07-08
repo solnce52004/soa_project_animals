@@ -10,5 +10,5 @@ import java.util.Set;
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
-    Optional<Set<Animal>> findAllByUsername(String usernameByToken);
+    Optional<Set<Animal>> findAllByUsername(String username);
 }

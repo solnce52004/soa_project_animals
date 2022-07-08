@@ -1,7 +1,6 @@
 package ru.example.auth.service.auth;
 
-
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
@@ -10,40 +9,30 @@ import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.User;
 import ru.example.auth.exception.custom_exception.AccessTokenException;
 import ru.example.auth.repo.AccessTokenRepository;
-import ru.example.auth.service.by_entities.UserService;
 
 import java.time.Instant;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class AccessTokenService implements TokenService<AccessToken> {
-    private final UserService userService;
     private final AccessTokenRepository accessTokenRepository;
-    private final RefreshTokenService refreshTokenService;
     private final JwtAccessTokenProvider jwtAccessTokenProvider;
-    @Value("${jwt.access-expires-at}")
     private final long accessExpirationInMs;
 
-//    public AccessTokenService(
-//            UserService userService,
-//            AccessTokenRepository accessTokenRepository, JwtAccessTokenProvider jwtAccessTokenProvider,
-//            @Value("${jwt.access-expires-at}")
-//                    long accessExpirationInMs
-//    ) {
-//        this.userService = userService;
-//        this.accessTokenRepository = accessTokenRepository;
-//        this.jwtAccessTokenProvider = jwtAccessTokenProvider;
-//        this.accessExpirationInMs = accessExpirationInMs;
-//    }
+    @Autowired
+    public AccessTokenService(
+            AccessTokenRepository accessTokenRepository,
+            JwtAccessTokenProvider jwtAccessTokenProvider,
+            @Value("${jwt.access-expires-at}") long accessExpirationInMs
+    ) {
+        this.accessTokenRepository = accessTokenRepository;
+        this.jwtAccessTokenProvider = jwtAccessTokenProvider;
+        this.accessExpirationInMs = accessExpirationInMs;
+    }
 
     @Override
-    public TokenInfoDTO process(TokenInfoDTO tokenInfo) {
-        String requestAccessToken = tokenInfo
-                .getAccessToken()
-                .getAccessTokenData();
-
-        final AccessToken currentAccessToken = findByToken(requestAccessToken)
+    public TokenInfoDTO process(String tokenData) {
+        final AccessToken currentAccessToken = findByToken(tokenData)
                 .orElseThrow(() -> new AccessTokenException("Access-token is missing from the database"));
 
         final String accessToken = currentAccessToken.getAccessTokenData();
@@ -69,7 +58,7 @@ public class AccessTokenService implements TokenService<AccessToken> {
     @Override
     public AccessToken verifyExpiration(AccessToken token) {
         if (token.getExpiresAt().compareTo(Instant.now()) < 0) {
-            deleteToken(token);
+            deleteToken(token.getAccessTokenData());
             throw new AccessTokenException("Access token was expired and deleted");
         }
         return token;
@@ -95,8 +84,8 @@ public class AccessTokenService implements TokenService<AccessToken> {
     }
 
     @Override
-    public void deleteToken(AccessToken token) {
-        accessTokenRepository.delete(token);
+    public void deleteToken(String tokenData) {
+        accessTokenRepository.deleteByAccessTokenData(tokenData);
     }
 
     @Override

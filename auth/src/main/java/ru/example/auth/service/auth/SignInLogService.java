@@ -18,8 +18,8 @@ public class SignInLogService {
     @Autowired
     public SignInLogService(
             SignInLogRepository signInLogRepository,
-            @Value("${signin.tries}") int maxTries,
-            @Value("${signin.expire}") int expireTimeMs
+            @Value("${sign-in.tries}") int maxTries,
+            @Value("${sign-in.expire}") int expireTimeMs
     ) {
         this.signInLogRepository = signInLogRepository;
         this.maxTries = maxTries;
@@ -27,15 +27,15 @@ public class SignInLogService {
     }
 
     public void checkTriesSignIn(String ip) {
-        signInLogRepository.save(new SignInLog(ip));
-
         Calendar inst = Calendar.getInstance();
         inst.set(Calendar.MILLISECOND,
                 (inst.get(Calendar.MILLISECOND) - expireTimeMs));
 
-        if (signInLogRepository.getByIpAndCreatedAtAfterExpireTime(ip, inst.getTime()).size() >= maxTries) {
+        if (signInLogRepository.getByIpAndCreatedAtAfterExpireTime(ip, inst.getTime()) >= maxTries) {
             throw new TooManySignInAttemptsException();
         }
+
+        signInLogRepository.save(new SignInLog(ip));
     }
 
     public void deleteByIp(String ip) {

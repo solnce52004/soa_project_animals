@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
-import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.dto.UserDTO;
+import ru.example.auth.dto.request.AuthRequestDTO;
+import ru.example.auth.dto.request.LogoutRequestDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.entity.User;
@@ -27,22 +27,13 @@ import java.util.stream.Collectors;
 @Log4j2
 public class AuthService {
     private final AuthenticationManager authenticationManager;
-    private final JwtAccessTokenProvider jwtAccessTokenProvider;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
     private final AccessTokenService accessTokenService;
 
-//    public boolean isAuthenticated() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-//            return false;
-//        }
-//        return authentication.isAuthenticated();
-//    }
-
-    public void checkIfExistsUsername(UserDTO userDTO) {
+    public void checkIfExistsUsername(String username) {
         User userExist = userService
-                .findByUsername(userDTO.getUsername())
+                .findByUsername(username)
                 .orElse(null);
 
         if (userExist != null) {
@@ -50,18 +41,18 @@ public class AuthService {
         }
     }
 
-    public UserDTO registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(AuthRequestDTO authRequestDTO) {
         userService.createUser(new User()
-                .setUsername(userDTO.getUsername())
-                .setPassword(userDTO.getPassword()));
+                .setUsername(authRequestDTO.getUsername())
+                .setPassword(authRequestDTO.getPassword()));
 
-        return loginUser(userDTO);
+        return loginUser(authRequestDTO);
     }
 
-    public UserDTO loginUser(UserDTO userDTO) {
+    public UserDTO loginUser(AuthRequestDTO authRequestDTO) {
         final UsernamePasswordAuthenticationToken requestToken = new UsernamePasswordAuthenticationToken(
-                userDTO.getUsername(),
-                userDTO.getPassword()
+                authRequestDTO.getUsername(),
+                authRequestDTO.getPassword()
         );
         final Authentication authentication = authenticationManager.authenticate(requestToken);
 
@@ -70,7 +61,7 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        final User user = userService.findByUsername(userDTO.getUsername())
+        final User user = userService.findByUsername(authRequestDTO.getUsername())
                 .orElseThrow(UserNotFoundException::new);
 
         final AccessToken accessToken = accessTokenService.createToken(user);
@@ -93,8 +84,8 @@ public class AuthService {
         }
     }
 
-    public void logout(TokenInfoDTO tokenInfo) {
-        accessTokenService.deleteToken(tokenInfo.getAccessToken());
-        refreshTokenService.deleteToken(tokenInfo.getRefreshToken());
+    public void logout(LogoutRequestDTO logoutRequestDTO) {
+        accessTokenService.deleteToken(logoutRequestDTO.getAccessTokenData());
+        refreshTokenService.deleteToken(logoutRequestDTO.getRefreshTokenData());
     }
 }

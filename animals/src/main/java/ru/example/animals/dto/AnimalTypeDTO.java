@@ -10,9 +10,7 @@ import org.springframework.data.annotation.Transient;
 import ru.example.animals.entity.AnimalType;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -20,13 +18,12 @@ import java.util.Set;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalTypeDTO implements Serializable {
-    @JsonIgnore
     @Transient
     private static final long serialVersionUID = 115L;
 
+    @JsonIgnore
     private Long id;
     private String title;
-    private Set<AnimalDTO> animals = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

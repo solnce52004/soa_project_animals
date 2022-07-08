@@ -2,11 +2,13 @@ package ru.example.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.internal.util.stereotypes.Immutable;
+import ru.example.auth.enums.PermissionEnum;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,14 +19,14 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
+@Accessors(chain = true)
 @EqualsAndHashCode(exclude = {"id", "roles"})
 @ToString(exclude = {"id", "roles"})
 @DynamicUpdate
 @DynamicInsert
-
 public class Permission implements Serializable {
+    @Transient
     private static final Long serialVersionUID = 1L;
 
     @Id
@@ -34,7 +36,7 @@ public class Permission implements Serializable {
 
     @Immutable
     @Column(name = "title", nullable = false)
-    private String title;
+    private String title = PermissionEnum.WRITE.name();
 
     @JsonIgnore
     @ManyToMany(

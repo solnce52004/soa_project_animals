@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.example.animals.dto.AnimalDTO;
-import ru.example.animals.dto.ResponseDTO;
+import ru.example.animals.dto.response.ResponseDTO;
+import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
 import ru.example.animals.service.api.VerifyAccessTokenService;
 import ru.example.animals.service.modelservice.AnimalService;
 
@@ -22,9 +22,7 @@ import java.util.Set;
 
 @Api(tags = "Find animal by id", value = "AnimalController")
 @RestController
-@RequestMapping(
-        path = "/api/v1",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 public class AnimalController {
     private final AnimalService animalService;
@@ -53,11 +51,12 @@ public class AnimalController {
             @PathVariable("username") String username,
             HttpServletRequest request
     ) {
-        final String usernameByToken = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        if (!username.equals(usernameVerified)) {
+            throw new UserUnauthorizedException();
+        }
 
-        final Set<AnimalDTO> animals = animalService.findAllAnimalsByUsername(usernameByToken);
+        final Set<AnimalDTO> animals = animalService.findAllAnimalsByUsername(username);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(animals)
@@ -87,13 +86,14 @@ public class AnimalController {
             @PathVariable("id") Long animalId,
             HttpServletRequest request
     ) {
-        final String username = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
 
-        final AnimalDTO animalById = animalService.findAnimalById(new AnimalDTO()
-                .setId(animalId)
-                .setUsername(username));
+        final AnimalDTO animalById = animalService
+                .findAnimalById(new AnimalDTO().setId(animalId));
+
+        if (!animalById.getUsername().equals(usernameVerified)) {
+            throw new UserUnauthorizedException();
+        }
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animalById))
@@ -118,12 +118,13 @@ public class AnimalController {
             @Valid @RequestBody AnimalDTO animalDTO,
             HttpServletRequest request
     ) {
-        final String username = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
 
+        if (!animalDTO.getUsername().equals(usernameVerified)) {
+            throw new UserUnauthorizedException();
+        }
         final AnimalDTO animal = animalService.create(
-                animalDTO.setUsername(username));
+                animalDTO.setUsername(usernameVerified));
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
@@ -149,13 +150,11 @@ public class AnimalController {
             @Valid @RequestBody AnimalDTO animalDTO,
             HttpServletRequest request
     ) {
-        final String username = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
-
-        final AnimalDTO animal = animalService.update(
-                animalId,
-                animalDTO.setUsername(username));
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        if (!animalDTO.getUsername().equals(usernameVerified)) {
+            throw new UserUnauthorizedException();
+        }
+        final AnimalDTO animal = animalService.update(animalId, animalDTO);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
@@ -175,19 +174,16 @@ public class AnimalController {
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<ResponseDTO> putAnimal(
-            @PathVariable("id") Long animalId,
             @Valid @RequestBody AnimalDTO animalDTO,
             HttpServletRequest request
     ) {
-        final String username = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
-
-        final AnimalDTO animal = animalService.update(
-                animalId,
-                animalDTO.setUsername(username));
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        if (!animalDTO.getUsername().equals(usernameVerified)) {
+            throw new UserUnauthorizedException();
+        }
+        final AnimalDTO animal = animalService.update(animalDTO.getId(), animalDTO);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
@@ -212,11 +208,8 @@ public class AnimalController {
             @PathVariable("id") Long animalId,
             HttpServletRequest request
     ) {
-        final String username = verifyAccessTokenService
-                .getVerifiedResponseDTO(request)
-                .getUsername();
-
-        animalService.delete(animalId, username);
+        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        animalService.delete(animalId, usernameVerified);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setHttpStatus(HttpStatus.ACCEPTED));

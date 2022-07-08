@@ -9,8 +9,8 @@ import ru.example.auth.converter.UserPasswordAttributeConverter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +28,8 @@ import java.util.Set;
 @DynamicUpdate
 @DynamicInsert
 public class User implements Serializable {
-    private static final Long serialVersionUID = 1L;
+    @Transient
+    private static final Long serialVersionUID = 2246453L;
 
     @Id
     @Column(name = "id", nullable = false)

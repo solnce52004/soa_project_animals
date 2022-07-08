@@ -1,6 +1,7 @@
 package ru.example.auth.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.experimental.Accessors;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ import java.util.Set;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class UserDTO implements Serializable {
+    @Transient
     private static final long serialVersionUID = 1L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
@@ -38,6 +41,7 @@ final public class UserDTO implements Serializable {
 
     private AccessToken accessToken;
     private RefreshToken refreshToken;
+    @JsonIgnore
     private Set<String> roles = new HashSet<>();
 
     //for mapping request
@@ -60,11 +64,5 @@ final public class UserDTO implements Serializable {
     ) {
         this.username = username;
         this.password = password;
-    }
-
-    public static UserDTO clean(UserDTO userDTO){
-        return userDTO
-                .setUsername(userDTO.getUsername().trim())
-                .setPassword(userDTO.getPassword().trim());
     }
 }

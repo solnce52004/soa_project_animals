@@ -3,10 +3,14 @@ package ru.example.animals.service.modelservice;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.example.animals.dto.AnimalDTO;
+import ru.example.animals.dto.AnimalTypeDTO;
 import ru.example.animals.entity.Animal;
+import ru.example.animals.entity.AnimalType;
 import ru.example.animals.exception.custom_exception.AnimalNotFoundException;
+import ru.example.animals.exception.custom_exception.AnimalTypeNotFoundException;
 import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
 import ru.example.animals.repo.AnimalRepository;
+import ru.example.animals.repo.AnimalTypeRepository;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AnimalService {
     private final AnimalRepository animalRepository;
+    private final AnimalTypeRepository animalTypeRepository;
     private final UserService userService;
 
     public AnimalDTO findAnimalById(AnimalDTO animalDTO) {
@@ -32,8 +37,14 @@ public class AnimalService {
     }
 
     public AnimalDTO create(AnimalDTO animalDTO) {
+        final Animal toAnimal = AnimalDTO.dtoMapToAnimal(animalDTO);
+        final String title = AnimalTypeDTO.dtoMapToAnimalType(animalDTO.getAnimalType()).getTitle();
+
+        final AnimalType animalType = animalTypeRepository.findByTitle(title)
+                .orElseThrow(AnimalTypeNotFoundException::new);
+
         final Animal animal = animalRepository.save(
-                AnimalDTO.dtoMapToAnimal(animalDTO));
+                toAnimal.setAnimalType(animalType));
         return AnimalDTO.animalMapToDto(animal);
     }
 

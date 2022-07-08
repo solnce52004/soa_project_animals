@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.auth.dto.ResponseDTO;
-import ru.example.auth.dto.TokenInfoDTO;
+import ru.example.auth.dto.response.ResponseDTO;
 import ru.example.auth.dto.UserDTO;
+import ru.example.auth.dto.request.AuthRequestDTO;
+import ru.example.auth.dto.request.CheckUsernameRequestDTO;
+import ru.example.auth.dto.request.LogoutRequestDTO;
 import ru.example.auth.service.auth.AuthService;
 import ru.example.auth.service.auth.SignInLogService;
 
@@ -47,14 +49,13 @@ public class AuthController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/validate/username")
     public ResponseEntity<ResponseDTO> validateUsername(
-            @Valid UserDTO userDTO
+            @Valid @RequestBody CheckUsernameRequestDTO requestDTO
     ) {
-        // TODO validate ???
-        userDTO = UserDTO.clean(userDTO);
-        authService.checkIfExistsUsername(userDTO);
+        requestDTO = CheckUsernameRequestDTO.clean(requestDTO);
+        authService.checkIfExistsUsername(requestDTO.getUsername());
 
         ResponseDTO responseDTO = new ResponseDTO()
-                .setUser(userDTO)
+                .setUsername(requestDTO.getUsername())
                 .setHttpStatus(HttpStatus.ACCEPTED);
 
         return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
@@ -75,14 +76,14 @@ public class AuthController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/registration")
     public ResponseEntity<ResponseDTO> registration(
-            @Valid UserDTO userDTO
+            @Valid @RequestBody AuthRequestDTO authRequestDTO
     ) {
-        userDTO = UserDTO.clean(userDTO);
-        authService.checkIfExistsUsername(userDTO);
-        final UserDTO user = authService.registerUser(userDTO);
+        authRequestDTO = AuthRequestDTO.clean(authRequestDTO);
+        authService.checkIfExistsUsername(authRequestDTO.getUsername());
+        final UserDTO user = authService.registerUser(authRequestDTO);
 
         ResponseDTO responseDTO = new ResponseDTO()
-                .setUser(user)
+                .setUsername(user.getUsername())
                 .setHttpStatus(HttpStatus.CREATED);
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
@@ -103,18 +104,18 @@ public class AuthController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(
-            @RequestBody UserDTO userDTO,
+            @Valid @RequestBody AuthRequestDTO authRequestDTO,
             HttpServletRequest request
     ) {
         final String ip = request.getRemoteAddr();
         signInLogService.checkTriesSignIn(ip);
 
-        userDTO = UserDTO.clean(userDTO);
-        final UserDTO user = authService.loginUser(userDTO);
+        authRequestDTO = AuthRequestDTO.clean(authRequestDTO);
+        final UserDTO user = authService.loginUser(authRequestDTO);
         signInLogService.deleteByIp(ip);
 
         return ResponseEntity.ok(new ResponseDTO()
-                .setUser(user)
+                .setUsername(user.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
 
@@ -130,9 +131,9 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> logout(
             HttpServletRequest request,
             HttpServletResponse response,
-            @Valid @RequestBody TokenInfoDTO tokenInfo
+            @Valid @RequestBody LogoutRequestDTO logoutRequestDTO
     ) {
-        authService.logout(tokenInfo);
+        authService.logout(logoutRequestDTO);
 
         final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, null);

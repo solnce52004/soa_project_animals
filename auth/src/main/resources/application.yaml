@@ -35,12 +35,9 @@ jwt:
   access-expires-at: 3600000
   refresh-expires-at: 86400000
 
-signin:
+sign-in:
   tries: 10
   expire: 3600000
-## For test
-#  expiration: 60000
-#  refresh: 120000
 
 ---
 #DEV
@@ -91,7 +88,7 @@ spring:
     # решает ошибку ClassCastException EntityManagerHolder
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     #      use-new-id-generator-mappings: false
 
     properties:

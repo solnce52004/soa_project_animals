@@ -47,14 +47,10 @@ public class Animal {
     @Column(name = "gender", nullable = false)
     private GenderType gender = GenderType.UNTITLED;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     @Generated(GenerationTime.ALWAYS)
-    @Column(name = "birthdate",
-            updatable = false,
-            insertable = false,
-            nullable = false,
-            columnDefinition = "TIMESTAMP")
+    @Column(name = "birthdate", columnDefinition = "TIMESTAMP")
     @ColumnDefault("2000-01-01 00:00:00")
     private Date birthdate;
 
@@ -79,9 +75,6 @@ public class Animal {
     @ColumnDefault("CURRENT_TIMESTAMP")
     private Date updatedAt;
 
-    // по ТЗ кличка - уникальна!
-    //TODO: следует ли учитывать другие поля при сравнении?
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
