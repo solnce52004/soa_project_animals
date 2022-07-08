@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "animals_db"."public"."animals"
         CONSTRAINT "animal_type_id_fk"
             REFERENCES "animal_types",
     "animal_name" CHARACTER VARYING(255) NOT NULL
-        CONSTRAINT "animalname_uindex"
+        CONSTRAINT "animal_name_uindex"
             UNIQUE,
     "gender" GENDER NOT NULL DEFAULT 'u'::GENDER,
     "birthdate" TIMESTAMP DEFAULT '2000-01-01 00:00:00+3'::TIMESTAMP NULL,

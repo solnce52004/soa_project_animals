@@ -18,7 +18,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
     @Modifying
     @Query(value = "INSERT INTO Animals\n" +
             "(username, animal_type_id, animal_name, gender, birthdate)\n" +
-            "VALUES (:username, :type, :animal_name, CAST(:gender AS gender), :birthdate)",
+            "VALUES (:username, :type, :animal_name, CAST(:gender AS GENDER), :birthdate)",
             nativeQuery = true)
     @Transactional
     void saveByParams(
