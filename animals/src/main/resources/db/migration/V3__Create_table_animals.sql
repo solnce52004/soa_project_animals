@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS "animals_db"."public"."animals"
     "animal_type_id" BIGSERIAL NOT NULL
         CONSTRAINT "animal_type_id_fk"
             REFERENCES "animal_types",
-    "name" CHARACTER VARYING(255) NOT NULL,
+    "animal_name" CHARACTER VARYING(255) NOT NULL
+        CONSTRAINT "animalname_uindex"
+            UNIQUE,
     "gender" GENDER NOT NULL DEFAULT 'u'::GENDER,
     "birthdate" TIMESTAMP DEFAULT '2000-01-01 00:00:00+3'::TIMESTAMP NULL,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -28,13 +30,13 @@ ALTER TABLE IF EXISTS ONLY "animals_db"."public"."animals"
     ALTER COLUMN "id" SET DEFAULT NEXTVAL('animals_db.public.animals_id_seq'::REGCLASS);
 
 CREATE INDEX IF NOT EXISTS "animals_name_index"
-    ON "animals_db"."public"."animals" ("name");
+    ON "animals_db"."public"."animals" ("animal_name");
 
 CREATE OR REPLACE FUNCTION "add_comments"()
     RETURNS VOID AS
 $$
 BEGIN
-    COMMENT ON TABLE "animals_db"."public"."animals" IS 'Список всех животных всех пользователей';
+    COMMENT ON TABLE "animals_db"."public"."animals" IS 'List of all animals of all users';
     COMMENT ON COLUMN "animals_db"."public"."animals"."gender" IS 'm - male, f - female, u - untitled';
 END
 $$ LANGUAGE "plpgsql";

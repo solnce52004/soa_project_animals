@@ -2,11 +2,13 @@ package ru.example.animals.service.modelservice;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.example.animals.dto.AnimalDTO;
 import ru.example.animals.dto.AnimalTypeDTO;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
 import ru.example.animals.exception.custom_exception.AnimalNotFoundException;
+import ru.example.animals.exception.custom_exception.AnimalNotUniqueException;
 import ru.example.animals.exception.custom_exception.AnimalTypeNotFoundException;
 import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
 import ru.example.animals.repo.AnimalRepository;
@@ -36,16 +38,36 @@ public class AnimalService {
         return AnimalDTO.animalMapToDto(animal);
     }
 
+    @Transactional
     public AnimalDTO create(AnimalDTO animalDTO) {
-        final Animal toAnimal = AnimalDTO.dtoMapToAnimal(animalDTO);
+        final Animal toSaveAnimal = AnimalDTO.dtoMapToAnimal(animalDTO);
         final String title = AnimalTypeDTO.dtoMapToAnimalType(animalDTO.getAnimalType()).getTitle();
 
         final AnimalType animalType = animalTypeRepository.findByTitle(title)
                 .orElseThrow(AnimalTypeNotFoundException::new);
+        final AnimalType type = animalTypeRepository.save(animalType);
 
-        final Animal animal = animalRepository.save(
-                toAnimal.setAnimalType(animalType));
+        final Animal existingAnimal = animalRepository.findByUsernameAndAnimalName(
+                toSaveAnimal.getUsername(),
+                toSaveAnimal.getAnimalName());
+
+        if (existingAnimal != null) {
+            throw new AnimalNotUniqueException();
+        }
+
+        final Animal animal = saveByParams(toSaveAnimal.setAnimalType(type));
         return AnimalDTO.animalMapToDto(animal);
+    }
+
+    public Animal saveByParams(Animal animal) {
+        animalRepository.saveByParams(
+                animal.getUsername(),
+                animal.getAnimalType().getId(),
+                animal.getAnimalName(),
+                animal.getGender().getName(),
+                animal.getBirthdate()
+        );
+        return animal;
     }
 
     public AnimalDTO update(Long animalId, AnimalDTO animalDTO) {

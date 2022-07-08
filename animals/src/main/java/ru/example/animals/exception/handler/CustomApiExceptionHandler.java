@@ -45,6 +45,14 @@ public class CustomApiExceptionHandler {
         return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(AnimalNotUniqueException.class)
+    public ResponseEntity<ResponseDTO> handleAnimalNotUniqueException(
+            AnimalNotUniqueException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     private ResponseEntity<ResponseDTO> getResponseEntity(
             String exMsg,
             HttpStatus httpStatus

@@ -39,12 +39,12 @@ public class Animal {
     @Fetch(value = FetchMode.JOIN)
     private AnimalType animalType = new AnimalType();
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    @Column(name = "animal_name", nullable = false, unique = true)
+    private String animalName;
 
     //    @Enumerated(EnumType.STRING) - не использовать совместно с конвертером
     @Convert(converter = GenderTypeAttributeConverter.class)
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender", nullable = false, columnDefinition = "GENDER NOT NULL DEFAULT 'u'::GENDER")
     private GenderType gender = GenderType.UNTITLED;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
@@ -79,21 +79,21 @@ public class Animal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Animal animal = (Animal) o;
-        return getName().equals(animal.getName()) &&
+        return getAnimalName().equals(animal.getAnimalName()) &&
                 Objects.equals(getGender(), animal.getGender()) &&
                 Objects.equals(getBirthdate(), animal.getBirthdate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getGender(), getBirthdate());
+        return Objects.hash(getAnimalName(), getGender(), getBirthdate());
     }
 
     @Override
     public String toString() {
         return "Animal{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + animalName + '\'' +
                 ", gender=" + gender +
                 ", birthdate=" + birthdate +
                 ", createdAt=" + createdAt +

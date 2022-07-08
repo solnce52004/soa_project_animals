@@ -25,7 +25,6 @@ public class GenderTypeAttributeConverter implements AttributeConverter<GenderTy
     @Override
     public GenderType convertToEntityAttribute(Character ch) {
         log.info("convertToEntityAttribute {}", ch);
-        final GenderType[] values = GenderType.values();
         if (ch == null) {
             return null;
         }

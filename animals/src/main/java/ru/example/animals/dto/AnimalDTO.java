@@ -40,7 +40,7 @@ public final class AnimalDTO implements Serializable {
     @ApiModelProperty(notes = "Animal name", required = true)
     @NotBlank(message = ERROR_MSG_EMPTY_VALUE)
     @Size(min = 2, max = 255, message = ERROR_MSG_NOT_VALID)
-    private String name;
+    private String animalName;
     private GenderType gender = GenderType.UNTITLED;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private Date birthdate;
@@ -51,21 +51,21 @@ public final class AnimalDTO implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         AnimalDTO animalDTO = (AnimalDTO) o;
         return getUsername().equals(animalDTO.getUsername()) &&
-                getName().equals(animalDTO.getName()) &&
+                getAnimalName().equals(animalDTO.getAnimalName()) &&
                 getGender() == animalDTO.getGender() &&
                 Objects.equals(getBirthdate(), animalDTO.getBirthdate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getName(), getGender(), getBirthdate());
+        return Objects.hash(getUsername(), getAnimalName(), getGender(), getBirthdate());
     }
 
     @Override
     public String toString() {
         return "AnimalDTO{" +
                 "username='" + username + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + animalName + '\'' +
                 ", gender=" + gender +
                 ", birthdate=" + birthdate +
                 '}';
@@ -77,7 +77,7 @@ public final class AnimalDTO implements Serializable {
                 .setId(animalDTO.getId())
                 .setUsername(animalDTO.getUsername())
                 .setAnimalType(AnimalTypeDTO.dtoMapToAnimalType(animalType))
-                .setName(animalDTO.getName())
+                .setAnimalName(animalDTO.getAnimalName())
                 .setGender(animalDTO.getGender())
                 .setBirthdate(animalDTO.getBirthdate());
     }
@@ -86,7 +86,7 @@ public final class AnimalDTO implements Serializable {
         return new Animal()
                 .setId(animalDTO.getId())
                 .setUsername(animalDTO.getUsername())
-                .setName(animalDTO.getName())
+                .setAnimalName(animalDTO.getAnimalName())
                 .setGender(animalDTO.getGender())
                 .setBirthdate(animalDTO.getBirthdate());
     }
@@ -97,7 +97,7 @@ public final class AnimalDTO implements Serializable {
                 .setId(animal.getId())
                 .setUsername(animal.getUsername())
                 .setAnimalType(AnimalTypeDTO.animalTypeMapToDto(animalType))
-                .setName(animal.getName())
+                .setAnimalName(animal.getAnimalName())
                 .setGender(animal.getGender())
                 .setBirthdate(animal.getBirthdate());
     }
