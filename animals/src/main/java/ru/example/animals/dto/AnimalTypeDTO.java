@@ -42,16 +42,16 @@ public final class AnimalTypeDTO implements Serializable {
         this.title = title;
     }
 
-    public static AnimalType dtoMapToAnimalType(AnimalTypeDTO type) {
+    public static AnimalType dtoMapToAnimalType(AnimalTypeDTO dto) {
         return new AnimalType()
-                .setId(type.getId())
-                .setTitle(type.getTitle());
+                .setId(dto.getId())
+                .setTitle(dto.getTitle());
     }
 
-    public static AnimalTypeDTO animalTypeMapToDto(AnimalType type) {
+    public static AnimalTypeDTO animalTypeMapToDto(AnimalType animalType) {
         return new AnimalTypeDTO(
-                type.getId(),
-                type.getTitle()
+                animalType.getId(),
+                animalType.getTitle()
         );
     }
 }

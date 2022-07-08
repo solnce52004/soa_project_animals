@@ -31,7 +31,7 @@ public class AnimalService {
         final String animalUsername = animal.getUsername();
         final String requestUsername = animalDTO.getUsername();
 
-        if (!userService.checkUserAnimal(animalUsername, requestUsername)) {
+        if (!userService.isMismatchUserAnimal(animalUsername, requestUsername)) {
             throw new UserUnauthorizedException();
         }
 
@@ -41,21 +41,26 @@ public class AnimalService {
     @Transactional
     public AnimalDTO create(AnimalDTO animalDTO) {
         final Animal toSaveAnimal = AnimalDTO.dtoMapToAnimal(animalDTO);
-        final String title = AnimalTypeDTO.dtoMapToAnimalType(animalDTO.getAnimalType()).getTitle();
+        final String title = AnimalTypeDTO
+                .dtoMapToAnimalType(animalDTO.getAnimalType())
+                .getTitle();
 
-        final AnimalType animalType = animalTypeRepository.findByTitle(title)
-                .orElseThrow(AnimalTypeNotFoundException::new);
-        final AnimalType type = animalTypeRepository.save(animalType);
+        final Animal existingAnimal = animalRepository.findByAnimalNameAndUsername(
+                toSaveAnimal.getAnimalName(),
+                toSaveAnimal.getUsername());
 
-        final Animal existingAnimal = animalRepository.findByUsernameAndAnimalName(
-                toSaveAnimal.getUsername(),
-                toSaveAnimal.getAnimalName());
-
+        //check unique
         if (existingAnimal != null) {
             throw new AnimalNotUniqueException();
         }
 
-        final Animal animal = saveByParams(toSaveAnimal.setAnimalType(type));
+        //animal types already exists in db and immutable
+        final AnimalType type = animalTypeRepository.findByTitle(title)
+                .orElseThrow(AnimalTypeNotFoundException::new);
+
+        final Animal animal = saveByParams(
+                toSaveAnimal.setAnimalType(type));
+
         return AnimalDTO.animalMapToDto(animal);
     }
 
@@ -70,36 +75,57 @@ public class AnimalService {
         return animal;
     }
 
-    public AnimalDTO update(Long animalId, AnimalDTO animalDTO) {
-        final Animal animal = animalRepository.findById(animalId)
+    public AnimalDTO updateById(Long animalId, AnimalDTO animalDTO) {
+        final Animal existingAnimal = animalRepository.findByIdAndUsername(animalId, animalDTO.getUsername())
                 .orElseThrow(AnimalNotFoundException::new);
 
-        if (!userService.checkUserAnimal(animal.getUsername(), animalDTO.getUsername())) {
-            throw new UserUnauthorizedException();
+        return updateFromDto(existingAnimal, animalDTO);
+    }
+
+    public AnimalDTO updateByAnimalName(String animalName, AnimalDTO animalDTO) {
+        final Animal existingAnimal = animalRepository.findByAnimalNameAndUsername(
+                animalName,
+                animalDTO.getUsername());
+
+        if (existingAnimal == null) {
+            throw new AnimalNotFoundException();
         }
 
-        final Animal updatedAnimal = animalRepository.save(
-                AnimalDTO.dtoMapToExistsAnimal(animalDTO, animal));
+        return updateFromDto(existingAnimal, animalDTO);
+    }
 
-        return AnimalDTO.animalMapToDto(updatedAnimal);
+    private AnimalDTO updateFromDto(Animal animal, AnimalDTO animalDTO) {
+        final String title = animalDTO.getAnimalType().getTitle();
+        if (title == null) {
+            throw new AnimalTypeNotFoundException();
+        }
+
+        final AnimalType type = animalTypeRepository.findByTitle(title)
+                .orElseThrow(AnimalTypeNotFoundException::new);
+
+        final Animal mapped = AnimalDTO.dtoMapToAnimal(animalDTO, animal)
+                .setAnimalType(type);
+
+        final Animal updated = animalRepository.save(mapped);
+        return AnimalDTO.animalMapToDto(updated);
     }
 
     public void delete(Long animalId, String username) {
         final Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(AnimalNotFoundException::new);
 
-        if (!userService.checkUserAnimal(animal.getUsername(), username)) {
+        if (userService.isMismatchUserAnimal(animal.getUsername(), username)) {
             throw new UserUnauthorizedException();
         }
 
         animalRepository.delete(animal);
     }
 
-    public Set<AnimalDTO> findAllAnimalsByUsername(String usernameByToken) {
-        return animalRepository.findAllByUsername(usernameByToken)
+    public Set<AnimalDTO> findAllAnimalsByUsername(String username) {
+        return animalRepository.findAllByUsername(username)
                 .orElseThrow(AnimalNotFoundException::new)
-                .stream().map(AnimalDTO::animalMapToDto)
+                .stream()
+                .map(AnimalDTO::animalMapToDto)
                 .collect(Collectors.toSet());
-
     }
 }

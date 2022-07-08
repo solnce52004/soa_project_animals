@@ -31,5 +31,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     Optional<Set<Animal>> findAllByUsername(String username);
 
-    Animal findByUsernameAndAnimalName(String username, String animalName);
+    Animal findByAnimalNameAndUsername(String animalName, String username);
+
+    Optional<Animal> findByIdAndUsername(Long animalId, String username);
 }

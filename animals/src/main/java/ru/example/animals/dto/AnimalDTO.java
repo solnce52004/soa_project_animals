@@ -71,34 +71,33 @@ public final class AnimalDTO implements Serializable {
                 '}';
     }
 
-    public static Animal dtoMapToExistsAnimal(AnimalDTO animalDTO, Animal animal) {
-        final AnimalTypeDTO animalType = animalDTO.getAnimalType();
+    public static Animal dtoMapToAnimal(AnimalDTO dto, Animal animal) {
         return animal
-                .setId(animalDTO.getId())
-                .setUsername(animalDTO.getUsername())
-                .setAnimalType(AnimalTypeDTO.dtoMapToAnimalType(animalType))
-                .setAnimalName(animalDTO.getAnimalName())
-                .setGender(animalDTO.getGender())
-                .setBirthdate(animalDTO.getBirthdate());
+                .setId(dto.getId())
+                .setUsername(dto.getUsername())
+                .setAnimalName(dto.getAnimalName())
+                .setGender(dto.getGender())
+                .setBirthdate(dto.getBirthdate());
     }
 
-    public static Animal dtoMapToAnimal(AnimalDTO animalDTO) {
+    public static Animal dtoMapToAnimal(AnimalDTO dto) {
         return new Animal()
-                .setId(animalDTO.getId())
-                .setUsername(animalDTO.getUsername())
-                .setAnimalName(animalDTO.getAnimalName())
-                .setGender(animalDTO.getGender())
-                .setBirthdate(animalDTO.getBirthdate());
+                .setId(dto.getId())
+                .setUsername(dto.getUsername())
+                .setAnimalName(dto.getAnimalName())
+                .setGender(dto.getGender())
+                .setBirthdate(dto.getBirthdate());
     }
 
-    public static AnimalDTO animalMapToDto(Animal animal) {
-        final AnimalType animalType = animal.getAnimalType();
+    public static AnimalDTO animalMapToDto(Animal a) {
+        final AnimalType type = a.getAnimalType();
+
         return new AnimalDTO()
-                .setId(animal.getId())
-                .setUsername(animal.getUsername())
-                .setAnimalType(AnimalTypeDTO.animalTypeMapToDto(animalType))
-                .setAnimalName(animal.getAnimalName())
-                .setGender(animal.getGender())
-                .setBirthdate(animal.getBirthdate());
+                .setId(a.getId())
+                .setUsername(a.getUsername())
+                .setAnimalType(AnimalTypeDTO.animalTypeMapToDto(type))
+                .setAnimalName(a.getAnimalName())
+                .setGender(a.getGender())
+                .setBirthdate(a.getBirthdate());
     }
 }

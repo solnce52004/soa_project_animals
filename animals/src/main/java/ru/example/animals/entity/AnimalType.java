@@ -14,6 +14,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * List of animal`s types - already exists in db and immutable
+ */
 @Table(name = "animal_types", catalog = "auth_db", schema = "public")
 @Entity
 @Getter
@@ -21,8 +24,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@DynamicUpdate
-@DynamicInsert
+@Immutable
 public class AnimalType {
     @Id
     @Column(name = "id", nullable = false)

@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Api(tags = "Managing animal entities", value = "AnimalController")
 @RestController
-@RequestMapping("/api/v1/animal")
+@RequestMapping("/api/v1/animal/")
 @AllArgsConstructor
 public class AnimalController {
     private final AnimalService animalService;
@@ -159,7 +159,7 @@ public class AnimalController {
         if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
-        final AnimalDTO animal = animalService.update(animalId, animalDTO);
+        final AnimalDTO animal = animalService.updateById(animalId, animalDTO);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
@@ -167,7 +167,7 @@ public class AnimalController {
     }
 
     @Operation(method = "PUT",
-            description = "Update animal",
+            description = "Update all of animal`s data",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
@@ -188,7 +188,7 @@ public class AnimalController {
         if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
-        final AnimalDTO animal = animalService.update(animalDTO.getId(), animalDTO);
+        final AnimalDTO animal = animalService.updateByAnimalName(animalDTO.getAnimalName(), animalDTO);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
