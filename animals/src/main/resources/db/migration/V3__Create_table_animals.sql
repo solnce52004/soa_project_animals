@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "animals_db"."public"."animals"
     "id" BIGSERIAL NOT NULL
         CONSTRAINT "animals_pk"
             PRIMARY KEY,
-    "username" VARCHAR(255) DEFAULT 'GUEST'::VARCHAR NOT NULL,
+    "username" VARCHAR(255) NOT NULL,
     "animal_type_id" BIGSERIAL NOT NULL
         CONSTRAINT "animal_type_id_fk"
             REFERENCES "animal_types",

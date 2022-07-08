@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.auth.dto.response.ResponseDTO;
 import ru.example.auth.dto.UserDTO;
 import ru.example.auth.dto.request.AuthRequestDTO;
 import ru.example.auth.dto.request.CheckUsernameRequestDTO;
 import ru.example.auth.dto.request.LogoutRequestDTO;
+import ru.example.auth.dto.response.ResponseDTO;
+import ru.example.auth.dto.response.ResponseTokenDTO;
 import ru.example.auth.service.auth.AuthService;
 import ru.example.auth.service.auth.SignInLogService;
 
@@ -75,14 +76,16 @@ public class AuthController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/registration")
-    public ResponseEntity<ResponseDTO> registration(
+    public ResponseEntity<ResponseTokenDTO> registration(
             @Valid @RequestBody AuthRequestDTO authRequestDTO
     ) {
         authRequestDTO = AuthRequestDTO.clean(authRequestDTO);
         authService.checkIfExistsUsername(authRequestDTO.getUsername());
         final UserDTO user = authService.registerUser(authRequestDTO);
 
-        ResponseDTO responseDTO = new ResponseDTO()
+        ResponseTokenDTO responseDTO = new ResponseTokenDTO()
+                .setAccessToken(user.getAccessToken())
+                .setRefreshToken(user.getRefreshToken())
                 .setUsername(user.getUsername())
                 .setHttpStatus(HttpStatus.CREATED);
 
@@ -103,7 +106,7 @@ public class AuthController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(
+    public ResponseEntity<ResponseTokenDTO> login(
             @Valid @RequestBody AuthRequestDTO authRequestDTO,
             HttpServletRequest request
     ) {
@@ -114,7 +117,9 @@ public class AuthController {
         final UserDTO user = authService.loginUser(authRequestDTO);
         signInLogService.deleteByIp(ip);
 
-        return ResponseEntity.ok(new ResponseDTO()
+        return ResponseEntity.ok(new ResponseTokenDTO()
+                .setAccessToken(user.getAccessToken())
+                .setRefreshToken(user.getRefreshToken())
                 .setUsername(user.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
