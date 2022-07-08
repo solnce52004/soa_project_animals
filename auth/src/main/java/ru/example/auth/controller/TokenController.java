@@ -40,7 +40,7 @@ public class TokenController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
-                            responseCode = "401",
+                            responseCode = "403",
                             description = "Token is invalid",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
@@ -48,18 +48,8 @@ public class TokenController {
     public ResponseEntity<ResponseDTO> verifyAccessToken(
             @RequestBody RequestTokenDTO requestTokenDTO
     ) {
-        TokenInfoDTO tokenInfoDTO;
-//        try{
-
-            tokenInfoDTO = accessTokenService.process(
+        TokenInfoDTO tokenInfoDTO = accessTokenService.process(
                     requestTokenDTO.getTokenData());
-
-//        }catch (RuntimeException ex){
-//            return new ResponseEntity<>(
-//                    new ResponseDTO()
-//                            .setError(new BaseError().setDetailMessage(ex.getMessage())),
-//                    HttpStatus.FORBIDDEN);
-//        }
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setUsername(tokenInfoDTO.getUsername())

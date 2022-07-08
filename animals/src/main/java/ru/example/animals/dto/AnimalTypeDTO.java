@@ -14,8 +14,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @Accessors(chain = true)
-@Getter
-@Setter
+@Getter @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalTypeDTO implements Serializable {
     @Transient

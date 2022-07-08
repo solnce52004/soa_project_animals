@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import ru.example.animals.dto.response.ResponseDTO;
 import ru.example.animals.exception.custom_exception.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class CustomApiExceptionHandler {
 
     @ExceptionHandler(AnimalNotFoundException.class)
-    public ResponseEntity<BaseError> handleAnimalNotFoundException(
+    public ResponseEntity<ResponseDTO> handleAnimalNotFoundException(
             AnimalNotFoundException ex,
             WebRequest request
     ) {
@@ -21,7 +22,7 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(AnimalTypeNotFoundException.class)
-    public ResponseEntity<BaseError> handleAnimalTypeNotFoundException(
+    public ResponseEntity<ResponseDTO> handleAnimalTypeNotFoundException(
             AnimalTypeNotFoundException ex,
             WebRequest request
     ) {
@@ -29,7 +30,7 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<BaseError> handleUserUnauthorizedException(
+    public ResponseEntity<ResponseDTO> handleUserUnauthorizedException(
             UserUnauthorizedException ex,
             WebRequest request
     ) {
@@ -37,14 +38,14 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(VerifyTokenException.class)
-    public ResponseEntity<BaseError> handleVerifyTokenException(
+    public ResponseEntity<ResponseDTO> handleVerifyTokenException(
             VerifyTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<BaseError> getResponseEntity(
+    private ResponseEntity<ResponseDTO> getResponseEntity(
             String exMsg,
             HttpStatus httpStatus
     ) {
@@ -54,6 +55,6 @@ public class CustomApiExceptionHandler {
                 .setHttpStatus(httpStatus.value())
                 .setHttpStatusName(httpStatus);
 
-        return new ResponseEntity<>(error, httpStatus);
+        return new ResponseEntity<>(new ResponseDTO().setError(error), httpStatus);
     }
 }

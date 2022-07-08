@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter @Getter
 @Accessors(chain = true)
 @EqualsAndHashCode
@@ -43,26 +44,4 @@ final public class UserDTO implements Serializable {
     private RefreshToken refreshToken;
     @JsonIgnore
     private Set<String> roles = new HashSet<>();
-
-    //for mapping request
-    public UserDTO(
-            @NotBlank(message = ERROR_MSG_EMPTY_VALUE)
-            @Size(min = 2, max = 255, message = ERROR_MSG_NOT_VALID)
-                    String username
-    ) {
-        this.username = username;
-    }
-
-    //for mapping request
-    public UserDTO(
-            @NotBlank(message = ERROR_MSG_EMPTY_VALUE)
-            @Size(min = 2, max = 255, message = ERROR_MSG_NOT_VALID)
-                    String username,
-            @NotBlank(message = ERROR_MSG_EMPTY_VALUE)
-            @Size(min = 2, max = 8, message = ERROR_MSG_NOT_VALID)
-                    String password
-    ) {
-        this.username = username;
-        this.password = password;
-    }
 }

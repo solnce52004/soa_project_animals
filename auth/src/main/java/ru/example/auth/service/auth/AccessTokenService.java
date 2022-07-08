@@ -32,6 +32,10 @@ public class AccessTokenService implements TokenService<AccessToken> {
 
     @Override
     public TokenInfoDTO process(String tokenData) {
+        if (tokenData == null || tokenData.isEmpty()) {
+            throw new AccessTokenException("Token is empty");
+        }
+
         final AccessToken currentAccessToken = findByToken(tokenData)
                 .orElseThrow(() -> new AccessTokenException("Access-token is missing from the database"));
 

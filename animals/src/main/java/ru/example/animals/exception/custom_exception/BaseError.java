@@ -1,6 +1,8 @@
 package ru.example.animals.exception.custom_exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,7 +23,7 @@ public class BaseError implements Serializable {
     @Transient
     private static final long serialVersionUID = 111L;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime timestamp = LocalDateTime.now();
     private int httpStatus;
     private HttpStatus httpStatusName;

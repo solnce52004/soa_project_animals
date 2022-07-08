@@ -6,15 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import ru.example.auth.dto.response.ResponseDTO;
 import ru.example.auth.exception.custom_exception.*;
-
-import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class CustomApiExceptionHandler {
 
     @ExceptionHandler(JwtAuthException.class)
-    public ResponseEntity<BaseError> handleJwtAuthException(
+    public ResponseEntity<ResponseDTO> handleJwtAuthException(
             JwtAuthException ex,
             WebRequest request
     ) {
@@ -22,7 +21,7 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<BaseError> handleRegistrationException(
+    public ResponseEntity<ResponseDTO> handleRegistrationException(
             RegistrationException ex,
             WebRequest request
     ) {
@@ -30,15 +29,15 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(AccessTokenException.class)
-    public ResponseEntity<BaseError> handleAccessTokenException(
+    public ResponseEntity<ResponseDTO> handleAccessTokenException(
             AccessTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RefreshTokenException.class)
-    public ResponseEntity<BaseError> handleTokenRefreshException(
+    public ResponseEntity<ResponseDTO> handleTokenRefreshException(
             RefreshTokenException ex,
             WebRequest request
     ) {
@@ -46,7 +45,7 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<BaseError> handleUserNotFoundException(
+    public ResponseEntity<ResponseDTO> handleUserNotFoundException(
             UserNotFoundException ex,
             WebRequest request
     ) {
@@ -54,7 +53,7 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<BaseError> handleUserUnauthorizedException(
+    public ResponseEntity<ResponseDTO> handleUserUnauthorizedException(
             UserUnauthorizedException ex,
             WebRequest request
     ) {
@@ -62,23 +61,23 @@ public class CustomApiExceptionHandler {
     }
 
     @ExceptionHandler(TooManySignInAttemptsException.class)
-    public ResponseEntity<BaseError> handleTooManySignInAttemptsException(
+    public ResponseEntity<ResponseDTO> handleTooManySignInAttemptsException(
             TooManySignInAttemptsException ex,
             WebRequest request
     ) {
         return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<BaseError> getResponseEntity(
+    private ResponseEntity<ResponseDTO> getResponseEntity(
             String exMsg,
             HttpStatus httpStatus
     ) {
         BaseError error = new BaseError()
-                .setTimestamp(LocalDateTime.now())
+//                .setTimestamp(LocalDateTime.now())
                 .setDetailMessage(exMsg)
                 .setHttpStatus(httpStatus.value())
                 .setHttpStatusName(httpStatus);
 
-        return new ResponseEntity<>(error, httpStatus);
+        return new ResponseEntity<>(new ResponseDTO().setError(error), httpStatus);
     }
 }
