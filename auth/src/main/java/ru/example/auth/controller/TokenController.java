@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
 import ru.example.auth.dto.TokenInfoDTO;
-import ru.example.auth.dto.request.RequestRefreshTokenDTO;
+import ru.example.auth.dto.request.RefreshTokenRequestDTO;
 import ru.example.auth.dto.response.ResponseDTO;
-import ru.example.auth.dto.response.ResponseTokenDTO;
+import ru.example.auth.dto.response.TokenResponseDTO;
 import ru.example.auth.service.auth.AccessTokenService;
 import ru.example.auth.service.auth.RefreshTokenService;
 
@@ -74,13 +74,13 @@ public class TokenController {
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/refresh-token")
     @Secured({"ROLE_USER"})
-    public ResponseEntity<ResponseTokenDTO> refreshToken(
-            @Valid @RequestBody RequestRefreshTokenDTO requestRefreshTokenDTO
+    public ResponseEntity<TokenResponseDTO> refreshToken(
+            @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO
     ) {
         final TokenInfoDTO refreshed = refreshTokenService.process(
-                requestRefreshTokenDTO.getRefreshToken());
+                refreshTokenRequestDTO.getRefreshToken());
 
-        return ResponseEntity.ok(new ResponseTokenDTO()
+        return ResponseEntity.ok(new TokenResponseDTO()
                 .setAccessToken(refreshed.getAccessToken())
                 .setRefreshToken(refreshed.getRefreshToken())
                 .setUsername(refreshed.getUsername())

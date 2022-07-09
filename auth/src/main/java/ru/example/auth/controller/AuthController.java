@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
 import ru.example.auth.dto.UserDTO;
 import ru.example.auth.dto.request.AuthRequestDTO;
 import ru.example.auth.dto.request.CheckUsernameRequestDTO;
-import ru.example.auth.dto.request.LogoutRequestDTO;
+import ru.example.auth.dto.request.RefreshTokenRequestDTO;
 import ru.example.auth.dto.response.ResponseDTO;
-import ru.example.auth.dto.response.ResponseTokenDTO;
+import ru.example.auth.dto.response.TokenResponseDTO;
 import ru.example.auth.service.auth.AuthService;
 import ru.example.auth.service.auth.SignInLogService;
 
@@ -34,6 +35,7 @@ import javax.validation.Valid;
 public class AuthController {
     private final AuthService authService;
     private final SignInLogService signInLogService;
+    private final JwtAccessTokenProvider jwtAccessTokenProvider;
 
     @Operation(method = "POST",
             description = "Validate Username",
@@ -76,14 +78,14 @@ public class AuthController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/registration")
-    public ResponseEntity<ResponseTokenDTO> registration(
+    public ResponseEntity<TokenResponseDTO> registration(
             @Valid @RequestBody AuthRequestDTO authRequestDTO
     ) {
         authRequestDTO = AuthRequestDTO.clean(authRequestDTO);
         authService.checkIfExistsUsername(authRequestDTO.getUsername());
         final UserDTO user = authService.registerUser(authRequestDTO);
 
-        ResponseTokenDTO responseDTO = new ResponseTokenDTO()
+        TokenResponseDTO responseDTO = new TokenResponseDTO()
                 .setAccessToken(user.getAccessToken())
                 .setRefreshToken(user.getRefreshToken())
                 .setUsername(user.getUsername())
@@ -106,7 +108,7 @@ public class AuthController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
     @PostMapping("/login")
-    public ResponseEntity<ResponseTokenDTO> login(
+    public ResponseEntity<TokenResponseDTO> login(
             @Valid @RequestBody AuthRequestDTO authRequestDTO,
             HttpServletRequest request
     ) {
@@ -117,7 +119,7 @@ public class AuthController {
         final UserDTO user = authService.loginUser(authRequestDTO);
         signInLogService.deleteByIp(ip);
 
-        return ResponseEntity.ok(new ResponseTokenDTO()
+        return ResponseEntity.ok(new TokenResponseDTO()
                 .setAccessToken(user.getAccessToken())
                 .setRefreshToken(user.getRefreshToken())
                 .setUsername(user.getUsername())
@@ -136,9 +138,12 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> logout(
             HttpServletRequest request,
             HttpServletResponse response,
-            @Valid @RequestBody LogoutRequestDTO logoutRequestDTO
+            @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO
     ) {
-        authService.logout(logoutRequestDTO);
+        authService.logout(
+                jwtAccessTokenProvider.resolveToken(request),
+                refreshTokenRequestDTO.getRefreshToken()
+        );
 
         final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, null);

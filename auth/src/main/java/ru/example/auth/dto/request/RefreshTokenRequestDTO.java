@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class RequestRefreshTokenDTO implements Serializable {
+public class RefreshTokenRequestDTO implements Serializable {
     private static final long serialVersionUID = -3232348577199353604L;
 
     private String refreshToken;

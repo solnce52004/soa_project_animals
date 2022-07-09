@@ -1,6 +1,5 @@
 package ru.example.auth.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Data
-final public class ResponseTokenDTO implements Serializable {
+final public class TokenResponseDTO implements Serializable {
     private static final long serialVersionUID = -7615327438712912288L;
 
     private AccessToken accessToken;

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import ru.example.animals.dto.response.ResponseVerifyTokenDTO;
+import ru.example.animals.dto.response.VerifyTokenResponseDTO;
 import ru.example.animals.exception.custom_exception.VerifyTokenException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,13 +36,13 @@ public class VerifyAccessTokenService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> requestToken = new HttpEntity<>(headers);
 
-        ResponseEntity<ResponseVerifyTokenDTO> response;
+        ResponseEntity<VerifyTokenResponseDTO> response;
         try {
             response = new RestTemplate()
                     .postForEntity(
                             this.authUrlVerifyToken,
                             requestToken,
-                            ResponseVerifyTokenDTO.class
+                            VerifyTokenResponseDTO.class
                     );
 
         } catch (RuntimeException e) {
@@ -70,10 +70,10 @@ public class VerifyAccessTokenService {
         }
 
         if (eBody != null && !eBody.equals("")) {
-            final ResponseVerifyTokenDTO baseError = new Gson().fromJson(
+            final VerifyTokenResponseDTO baseError = new Gson().fromJson(
                     eBody,
 //                    StringEscapeUtils.unescapeJson(eBody),
-                    ResponseVerifyTokenDTO.class);
+                    VerifyTokenResponseDTO.class);
 
             if (baseError != null && baseError.getError() != null) {
                 return baseError.getError().getDetailMessage();

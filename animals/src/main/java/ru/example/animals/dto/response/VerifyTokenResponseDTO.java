@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public final class ResponseVerifyTokenDTO implements Serializable {
+public final class VerifyTokenResponseDTO implements Serializable {
     private static final long serialVersionUID = -7130621559509375118L;
 
     private BaseError error;

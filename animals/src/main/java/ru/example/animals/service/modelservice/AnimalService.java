@@ -65,6 +65,10 @@ public class AnimalService {
         final Animal existingAnimal = animalRepository.findByIdAndUsername(animalId, animalDTO.getUsername())
                 .orElseThrow(AnimalNotFoundException::new);
 
+        if (animalRepository.findByAnimalName(existingAnimal.getAnimalName()) != null) {
+            throw new AnimalNotUniqueException();
+        }
+
         return updateFromDto(existingAnimal, animalDTO);
     }
 

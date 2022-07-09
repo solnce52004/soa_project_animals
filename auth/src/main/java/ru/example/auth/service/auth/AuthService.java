@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.example.auth.dto.UserDTO;
 import ru.example.auth.dto.request.AuthRequestDTO;
-import ru.example.auth.dto.request.LogoutRequestDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.entity.User;
@@ -84,8 +84,9 @@ public class AuthService {
         }
     }
 
-    public void logout(LogoutRequestDTO logoutRequestDTO) {
-        accessTokenService.deleteToken(logoutRequestDTO.getAccessToken());
-        refreshTokenService.deleteToken(logoutRequestDTO.getRefreshToken());
+    @Transactional
+    public void logout(String accessToken, String refreshToken) {
+        accessTokenService.deleteToken(accessToken);
+        refreshTokenService.deleteToken(refreshToken);
     }
 }

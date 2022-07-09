@@ -1,5 +1,6 @@
 package ru.example.animals.exception.handler;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,14 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class CustomApiExceptionHandler {
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResponseDTO> handleConstraintViolationException(
+            ConstraintViolationException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(DataException.class)
     public ResponseEntity<ResponseDTO> handleDataException(
