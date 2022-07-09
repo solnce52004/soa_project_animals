@@ -21,8 +21,7 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 public class SignInLog implements Serializable {
-    @Transient
-    private static final Long serialVersionUID = 223L;
+    private static final long serialVersionUID = -5690018859592138949L;
 
     @Id
     @Column(name = "id", nullable = false)

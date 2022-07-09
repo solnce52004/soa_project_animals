@@ -24,8 +24,7 @@ import java.util.Set;
 @DynamicUpdate
 @DynamicInsert
 public class Role implements Serializable {
-    @Transient
-    private static final Long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3279343351032951253L;
 
     @Id
     @Column(name = "id", nullable = false)

@@ -19,15 +19,15 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(exclude = {"id", "roles"})
 @ToString(exclude = {"id", "roles"})
 @DynamicUpdate
 @DynamicInsert
 public class Permission implements Serializable {
-    @Transient
-    private static final Long serialVersionUID = 1L;
+    private static final long serialVersionUID = -681869902302420104L;
 
     @Id
     @Column(name = "id", nullable = false)

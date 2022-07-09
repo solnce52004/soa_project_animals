@@ -65,6 +65,8 @@ public class JwtAccessTokenProvider {
             // НЕ протух?
             return !claimsJws.getBody().getExpiration().before(new Date());
 
+        } catch (SignatureException e) {
+            throw new JwtAuthException("Invalid JWT signature");
         } catch (MalformedJwtException e) {
             throw new JwtAuthException("Invalid JWT token");
         } catch (ExpiredJwtException e) {

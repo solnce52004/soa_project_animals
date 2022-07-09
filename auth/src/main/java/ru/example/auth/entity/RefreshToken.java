@@ -24,8 +24,7 @@ import java.time.Instant;
 @DynamicInsert
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RefreshToken implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 45667L;
+    private static final long serialVersionUID = 7256066343928666315L;
 
     @JsonIgnore
     @Id

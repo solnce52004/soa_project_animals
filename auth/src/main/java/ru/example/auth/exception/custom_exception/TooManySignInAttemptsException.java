@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class TooManySignInAttemptsException extends RuntimeException {
+    private static final long serialVersionUID = 1937634427509975995L;
+
     public TooManySignInAttemptsException() {
         super("Too many signIn attempts");
     }

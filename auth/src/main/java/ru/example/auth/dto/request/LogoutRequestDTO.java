@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -15,8 +14,7 @@ import java.io.Serializable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LogoutRequestDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 1456567L;
+    private static final long serialVersionUID = 979257402689658574L;
 
     private String accessToken;
     private String refreshToken;

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -18,8 +17,7 @@ import java.io.Serializable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CheckUsernameRequestDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 546457L;
+    private static final long serialVersionUID = -5237340023310526014L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
     public static final String ERROR_MSG_NOT_VALID = "Invalid value";
@@ -29,7 +27,7 @@ public class CheckUsernameRequestDTO implements Serializable {
     private String username;
 
 
-    public static CheckUsernameRequestDTO clean(CheckUsernameRequestDTO requestDTO){
+    public static CheckUsernameRequestDTO clean(CheckUsernameRequestDTO requestDTO) {
         return requestDTO
                 .setUsername(requestDTO.getUsername().trim());
     }

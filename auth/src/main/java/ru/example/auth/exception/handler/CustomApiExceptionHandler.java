@@ -1,6 +1,8 @@
 package ru.example.auth.exception.handler;
 
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.Transient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,8 +12,9 @@ import ru.example.auth.dto.response.ResponseDTO;
 import ru.example.auth.exception.custom_exception.*;
 
 @RestControllerAdvice
+@Slf4j
 public class CustomApiExceptionHandler {
-
+    @Transient
     @ExceptionHandler(JwtAuthException.class)
     public ResponseEntity<ResponseDTO> handleJwtAuthException(
             JwtAuthException ex,
@@ -25,7 +28,7 @@ public class CustomApiExceptionHandler {
             RegistrationException ex,
             WebRequest request
     ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessTokenException.class)
@@ -41,7 +44,7 @@ public class CustomApiExceptionHandler {
             RefreshTokenException ex,
             WebRequest request
     ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -50,14 +53,6 @@ public class CustomApiExceptionHandler {
             WebRequest request
     ) {
         return getResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<ResponseDTO> handleUserUnauthorizedException(
-            UserUnauthorizedException ex,
-            WebRequest request
-    ) {
-        return getResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TooManySignInAttemptsException.class)
@@ -73,11 +68,15 @@ public class CustomApiExceptionHandler {
             HttpStatus httpStatus
     ) {
         BaseError error = new BaseError()
-//                .setTimestamp(LocalDateTime.now())
                 .setDetailMessage(exMsg)
                 .setHttpStatus(httpStatus.value())
                 .setHttpStatusName(httpStatus);
 
-        return new ResponseEntity<>(new ResponseDTO().setError(error), httpStatus);
+        return new ResponseEntity<>(
+                new ResponseDTO()
+                        .setError(error)
+                        .setHttpStatus(httpStatus),
+                httpStatus
+        );
     }
 }

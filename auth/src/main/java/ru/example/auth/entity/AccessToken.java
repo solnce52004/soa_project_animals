@@ -24,8 +24,7 @@ import java.time.Instant;
 @DynamicInsert
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AccessToken implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 78967L;
+    private static final long serialVersionUID = -7317292848716365029L;
 
     @JsonIgnore
     @Id

@@ -28,8 +28,7 @@ import java.util.Set;
 @DynamicUpdate
 @DynamicInsert
 public class User implements Serializable {
-    @Transient
-    private static final Long serialVersionUID = 2246453L;
+    private static final long serialVersionUID = 6558029016755221069L;
 
     @Id
     @Column(name = "id", nullable = false)

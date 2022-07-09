@@ -1,12 +1,10 @@
 package ru.example.animals.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Transient;
 import ru.example.animals.entity.AnimalType;
 
 import java.io.Serializable;
@@ -17,10 +15,8 @@ import java.util.Objects;
 @Getter @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalTypeDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 115L;
+    private static final long serialVersionUID = 2805268199853829209L;
 
-    @JsonIgnore
     private Long id;
     private String title;
 
@@ -37,22 +33,10 @@ public final class AnimalTypeDTO implements Serializable {
         return Objects.hash(getTitle());
     }
 
-    public AnimalTypeDTO(Long id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public static AnimalType dtoMapToAnimalType(AnimalTypeDTO dto) {
-        return new AnimalType()
-                .setId(dto.getId())
-                .setTitle(dto.getTitle());
-    }
-
     public static AnimalTypeDTO animalTypeMapToDto(AnimalType animalType) {
-        return new AnimalTypeDTO(
-                animalType.getId(),
-                animalType.getTitle()
-        );
+        return new AnimalTypeDTO()
+                .setId(animalType.getId())
+                .setTitle(animalType.getTitle());
     }
 }
 

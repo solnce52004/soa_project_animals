@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Transient;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
@@ -20,8 +19,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseError implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 111L;
+    private static final long serialVersionUID = -3921570689754792482L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime timestamp = LocalDateTime.now();

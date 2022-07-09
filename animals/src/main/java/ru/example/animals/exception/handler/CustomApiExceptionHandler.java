@@ -63,6 +63,11 @@ public class CustomApiExceptionHandler {
                 .setHttpStatus(httpStatus.value())
                 .setHttpStatusName(httpStatus);
 
-        return new ResponseEntity<>(new ResponseDTO().setError(error), httpStatus);
+        return new ResponseEntity<>(
+                new ResponseDTO()
+                        .setError(error)
+                        .setHttpStatus(httpStatus),
+                httpStatus
+        );
     }
 }

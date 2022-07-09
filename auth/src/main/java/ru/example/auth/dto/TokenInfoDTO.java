@@ -8,7 +8,6 @@ import lombok.experimental.Accessors;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -17,8 +16,7 @@ import java.io.Serializable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class TokenInfoDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 14567L;
+    private static final long serialVersionUID = 8315152477573756314L;
 
     private String username;
     private AccessToken accessToken;

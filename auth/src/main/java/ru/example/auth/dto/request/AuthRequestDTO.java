@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -17,8 +16,7 @@ import java.io.Serializable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AuthRequestDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 546457L;
+    private static final long serialVersionUID = -8389039602490794576L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
     public static final String ERROR_MSG_NOT_VALID = "Invalid value";
@@ -30,7 +28,7 @@ public class AuthRequestDTO implements Serializable {
     @Size(min = 2, max = 255, message = ERROR_MSG_NOT_VALID)
     private String password;
 
-    public static AuthRequestDTO clean(AuthRequestDTO authRequestDTO){
+    public static AuthRequestDTO clean(AuthRequestDTO authRequestDTO) {
         return authRequestDTO
                 .setUsername(authRequestDTO.getUsername().trim())
                 .setPassword(authRequestDTO.getPassword().trim());

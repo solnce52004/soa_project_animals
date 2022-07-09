@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -18,17 +17,18 @@ import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter @Getter
+@Setter
+@Getter
 @Accessors(chain = true)
 @EqualsAndHashCode
 @ToString
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class UserDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5337617247191253519L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
     public static final String ERROR_MSG_NOT_VALID = "Invalid value";
+
 
     @ApiModelProperty(notes = "Username", required = true)
     @NotBlank(message = ERROR_MSG_EMPTY_VALUE)

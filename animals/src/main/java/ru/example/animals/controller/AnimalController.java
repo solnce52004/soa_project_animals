@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Api(tags = "Managing animal entities", value = "AnimalController")
 @RestController
-@RequestMapping("/api/v1/animal/")
+@RequestMapping("/api/v1/animal")
 @AllArgsConstructor
 public class AnimalController {
     private final AnimalService animalService;
@@ -114,7 +114,7 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
-                            responseCode = "404",
+                            responseCode = "403",
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
@@ -145,7 +145,7 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
-                            responseCode = "404",
+                            responseCode = "403",
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
@@ -175,7 +175,7 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
-                            responseCode = "404",
+                            responseCode = "403",
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})
@@ -204,7 +204,7 @@ public class AnimalController {
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))}),
                     @ApiResponse(
-                            responseCode = "404",
+                            responseCode = "403",
                             description = "User is unauthorized",
                             content = {@Content(schema = @Schema(
                                     implementation = ResponseDTO.class))})})

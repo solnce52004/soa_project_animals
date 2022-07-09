@@ -29,6 +29,25 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
             @Param("birthdate") Date birthdate
     );
 
+    @Modifying
+    @Query(value = "UPDATE Animals SET\n" +
+            "username = :username, " +
+            "animal_type_id = :type, " +
+            "animal_name = :animal_name, " +
+            "gender = CAST(:gender AS GENDER), " +
+            "birthdate = :birthdate\n" +
+            "WHERE id = :id",
+            nativeQuery = true)
+    @Transactional
+    void updateByIdByParams(
+            @Param("id") Long id,
+            @Param("username") String username,
+            @Param("type") Long type,
+            @Param("animal_name") String animalName,
+            @Param("gender") Character gender,
+            @Param("birthdate") Date birthdate
+    );
+
     Optional<Set<Animal>> findAllByUsername(String username);
 
     Animal findByAnimalNameAndUsername(String animalName, String username);

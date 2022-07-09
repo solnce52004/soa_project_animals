@@ -27,7 +27,7 @@ import javax.validation.Valid;
 
 @Api(tags = "Token info", value = "TokenController")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 public class TokenController {
     private final AccessTokenService accessTokenService;

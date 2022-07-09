@@ -1,7 +1,6 @@
 package ru.example.animals.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Transient;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
 import ru.example.animals.enums.GenderType;
@@ -23,16 +21,15 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Getter @Setter
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 112L;
+    private static final long serialVersionUID = -805829958200586923L;
 
     public static final String ERROR_MSG_EMPTY_VALUE = "Empty value";
     public static final String ERROR_MSG_NOT_VALID = "Invalid value";
 
-    @JsonIgnore
     private Long id;
     private String username;
     private AnimalTypeDTO animalType = new AnimalTypeDTO();
@@ -71,16 +68,15 @@ public final class AnimalDTO implements Serializable {
                 '}';
     }
 
-    public static Animal dtoMapToAnimal(AnimalDTO dto, Animal animal) {
+    public static Animal dtoMapToExistsAnimal(AnimalDTO dto, Animal animal) {
         return animal
-                .setId(dto.getId())
                 .setUsername(dto.getUsername())
                 .setAnimalName(dto.getAnimalName())
                 .setGender(dto.getGender())
                 .setBirthdate(dto.getBirthdate());
     }
 
-    public static Animal dtoMapToAnimal(AnimalDTO dto) {
+    public static Animal dtoMapToNewAnimal(AnimalDTO dto) {
         return new Animal()
                 .setId(dto.getId())
                 .setUsername(dto.getUsername())
@@ -91,11 +87,12 @@ public final class AnimalDTO implements Serializable {
 
     public static AnimalDTO animalMapToDto(Animal a) {
         final AnimalType type = a.getAnimalType();
+        final AnimalTypeDTO mapType = AnimalTypeDTO.animalTypeMapToDto(type);
 
         return new AnimalDTO()
                 .setId(a.getId())
                 .setUsername(a.getUsername())
-                .setAnimalType(AnimalTypeDTO.animalTypeMapToDto(type))
+                .setAnimalType(mapType)
                 .setAnimalName(a.getAnimalName())
                 .setGender(a.getGender())
                 .setBirthdate(a.getBirthdate());

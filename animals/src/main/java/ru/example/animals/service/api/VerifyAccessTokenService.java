@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import ru.example.animals.dto.response.ResponseDTO;
+import ru.example.animals.dto.response.ResponseVerifyTokenDTO;
 import ru.example.animals.exception.custom_exception.VerifyTokenException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,13 +36,13 @@ public class VerifyAccessTokenService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> requestToken = new HttpEntity<>(headers);
 
-        ResponseEntity<ResponseDTO> response;
+        ResponseEntity<ResponseVerifyTokenDTO> response;
         try {
             response = new RestTemplate()
                     .postForEntity(
                             this.authUrlVerifyToken,
                             requestToken,
-                            ResponseDTO.class
+                            ResponseVerifyTokenDTO.class
                     );
 
         } catch (RuntimeException e) {
@@ -56,14 +56,34 @@ public class VerifyAccessTokenService {
         return response.getBody().getUsername();
     }
 
-    //403!!!
     private String deserializeException(RuntimeException e) {
-        final ResponseDTO baseError = new Gson().fromJson(
-                ((HttpClientErrorException.Forbidden) e).getResponseBodyAsString(),
-                ResponseDTO.class);
+        String eBody = null;
 
-        return baseError.getError() != null
-                ? baseError.getError().getDetailMessage()
+        if (e instanceof HttpClientErrorException.NotFound) {
+            eBody = ((HttpClientErrorException.NotFound) e).getResponseBodyAsString();
+        } else if (e instanceof HttpClientErrorException.Forbidden) {
+            eBody = ((HttpClientErrorException.Forbidden) e).getResponseBodyAsString();
+        } else if (e instanceof HttpClientErrorException.Unauthorized) {
+            eBody = ((HttpClientErrorException.Unauthorized) e).getResponseBodyAsString();
+        } else if (e instanceof HttpClientErrorException.BadRequest) {
+            eBody = ((HttpClientErrorException.BadRequest) e).getResponseBodyAsString();
+        }
+
+        if (eBody != null && !eBody.equals("")) {
+            final ResponseVerifyTokenDTO baseError = new Gson().fromJson(
+                    eBody,
+//                    StringEscapeUtils.unescapeJson(eBody),
+                    ResponseVerifyTokenDTO.class);
+
+            if (baseError != null && baseError.getError() != null) {
+                return baseError.getError().getDetailMessage();
+            }
+
+            return "";
+        }
+
+        return e.getMessage() != null
+                ? e.getMessage()
                 : "";
     }
 }

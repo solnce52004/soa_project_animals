@@ -10,7 +10,6 @@ import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.exception.custom_exception.BaseError;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 @NoArgsConstructor
@@ -19,8 +18,7 @@ import java.io.Serializable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class ResponseTokenDTO implements Serializable {
-    @Transient
-    private static final long serialVersionUID = 1467L;
+    private static final long serialVersionUID = -7615327438712912288L;
 
     private AccessToken accessToken;
     private RefreshToken refreshToken;
