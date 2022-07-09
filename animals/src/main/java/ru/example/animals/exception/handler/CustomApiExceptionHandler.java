@@ -88,6 +88,22 @@ public class CustomApiExceptionHandler {
         return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AnimalNotSupportedByUserException.class)
+    public ResponseEntity<ResponseDTO> handleAnimalNotSupportedByUserException(
+            AnimalNotSupportedByUserException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(DuplicateAnimalNameException.class)
+    public ResponseEntity<ResponseDTO> handleDuplicateAnimalNameException(
+            DuplicateAnimalNameException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<ResponseDTO> getResponseEntity(
             String exMsg,
             HttpStatus httpStatus

@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.animals.dto.AnimalDTO;
+import ru.example.animals.dto.request.PatchAnimalTypeRequestDTO;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
-import ru.example.animals.exception.custom_exception.AnimalNotFoundException;
-import ru.example.animals.exception.custom_exception.AnimalNotUniqueException;
-import ru.example.animals.exception.custom_exception.AnimalTypeNotFoundException;
-import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
+import ru.example.animals.enums.GenderType;
+import ru.example.animals.exception.custom_exception.*;
 import ru.example.animals.repo.AnimalRepository;
 import ru.example.animals.repo.AnimalTypeRepository;
 
@@ -60,45 +59,75 @@ public class AnimalService {
         return AnimalDTO.animalMapToDto(animal);
     }
 
+
     //patch
-    public AnimalDTO updateById(Long animalId, AnimalDTO animalDTO) {
-        final Animal existingAnimal = animalRepository.findByIdAndUsername(animalId, animalDTO.getUsername())
+    @Transactional
+    public Animal patchAnimalTypeByAnimalId(Long id, PatchAnimalTypeRequestDTO dto) {
+        //by id
+        final Animal animal = animalRepository.findById(id)
                 .orElseThrow(AnimalNotFoundException::new);
-
-        if (animalRepository.findByAnimalName(existingAnimal.getAnimalName()) != null) {
-            throw new AnimalNotUniqueException();
+        //other user
+        if (!dto.getUsername().equals(animal.getUsername())) {
+            throw new AnimalNotSupportedByUserException();
         }
+        //empty
+        if (dto.getAnimalType() == null) {
+            throw new AnimalTypeNotFoundException();
+        }
+        final String titleDto = dto.getAnimalType().getTitle();
+        // null/""
+        if (titleDto == null || titleDto.equals("")) {
+            throw new AnimalTypeNotFoundException();
+        }
+        //equals
+        if (titleDto.equals(animal.getAnimalType().getTitle())) {
+            return animal;
+        }
+        //by titleDto
+        final AnimalType typeDb = animalTypeRepository.findByTitle(titleDto)
+                .orElseThrow(AnimalTypeNotFoundException::new);
 
-        return updateFromDto(existingAnimal, animalDTO);
+        animalRepository.setFixedAnimalTypeIdWhereId(typeDb, id);
+        return animal.setAnimalType(typeDb);
     }
+
 
     //put
-    public AnimalDTO updateByAnimalName(String animalName, AnimalDTO animalDTO) {
-        final Animal existingAnimal = animalRepository.findByAnimalNameAndUsername(
-                animalName,
-                animalDTO.getUsername());
-
-        if (existingAnimal == null) {
-            throw new AnimalNotFoundException();
+    public Animal put(Long id, AnimalDTO dto) {
+        //by id
+        final Animal existingAnimal = animalRepository.findById(id)
+                .orElseThrow(AnimalNotFoundException::new);
+        //other user
+        if (!dto.getUsername().equals(existingAnimal.getUsername())) {
+            throw new AnimalNotSupportedByUserException();
         }
 
-        return updateFromDto(existingAnimal, animalDTO);
-    }
+        // new animal name
+        if (!dto.getAnimalName().equals(existingAnimal.getAnimalName())) {
+            //duplicate animal name
+            final Animal existingAnimalName = animalRepository.findByAnimalName(dto.getAnimalName());
+            if (existingAnimalName != null) {
+                throw new DuplicateAnimalNameException();
+            }
+        }
 
-    private AnimalDTO updateFromDto(Animal animal, AnimalDTO animalDTO) {
-        final String title = animalDTO.getAnimalType().getTitle();
+        //AnimalType
+        final String title = dto.getAnimalType().getTitle();
         if (title == null) {
             throw new AnimalTypeNotFoundException();
         }
-
         final AnimalType type = animalTypeRepository.findByTitle(title)
                 .orElseThrow(AnimalTypeNotFoundException::new);
 
-        final Animal mapped = AnimalDTO.dtoMapToExistsAnimal(animalDTO, animal)
-                .setAnimalType(type);
+        // mapping all
+        final Animal mapped = existingAnimal
+                .setUsername(dto.getUsername())
+                .setAnimalName(dto.getAnimalName())
+                .setAnimalType(type)
+                .setGender(GenderType.getOrDefaultGenderName(dto.getGender()))
+                .setBirthdate(dto.getBirthdate());
 
-        final Animal updated = updateByParams(mapped);
-        return AnimalDTO.animalMapToDto(updated);
+        return updateByParams(mapped);
     }
 
     public void delete(Long animalId, String username) {
