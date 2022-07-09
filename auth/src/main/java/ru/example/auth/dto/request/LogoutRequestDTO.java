@@ -12,7 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Data
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LogoutRequestDTO implements Serializable {
     private static final long serialVersionUID = 979257402689658574L;
 

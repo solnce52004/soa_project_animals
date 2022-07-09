@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.example.animals.dto.AnimalDTO;
 import ru.example.animals.dto.response.ResponseDTO;
+import ru.example.animals.exception.custom_exception.InvalidUsernameException;
 import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
 import ru.example.animals.service.api.VerifyAccessTokenService;
 import ru.example.animals.service.modelservice.AnimalService;
@@ -52,7 +53,7 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
-        if (!username.equals(usernameVerified)) {
+        if (username == null || !username.equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
 
@@ -87,16 +88,18 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
-
-        final AnimalDTO animalById = animalService
+        final AnimalDTO animalDTO = animalService
                 .findAnimalById(new AnimalDTO().setId(animalId));
 
-        if (!animalById.getUsername().equals(usernameVerified)) {
+        if (animalDTO.getUsername() == null || animalDTO.getUsername().equals("")) {
+            throw new InvalidUsernameException();
+        }
+        if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
 
         return ResponseEntity.ok(new ResponseDTO()
-                .setAnimals(Collections.singleton(animalById))
+                .setAnimals(Collections.singleton(animalDTO))
                 .setHttpStatus(HttpStatus.OK));
     }
 
@@ -124,7 +127,9 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
-
+        if (animalDTO.getUsername() == null || animalDTO.getUsername().equals("")) {
+            throw new InvalidUsernameException();
+        }
         if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
@@ -156,6 +161,9 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        if (animalDTO.getUsername() == null || animalDTO.getUsername().equals("")) {
+            throw new InvalidUsernameException();
+        }
         if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
@@ -185,6 +193,9 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        if (animalDTO.getUsername() == null || animalDTO.getUsername().equals("")) {
+            throw new InvalidUsernameException();
+        }
         if (!animalDTO.getUsername().equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }

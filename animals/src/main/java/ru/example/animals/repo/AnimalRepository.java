@@ -15,13 +15,13 @@ import java.util.Set;
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
-    @Modifying
     @Query(value = "INSERT INTO Animals\n" +
             "(username, animal_type_id, animal_name, gender, birthdate)\n" +
-            "VALUES (:username, :type, :animal_name, CAST(:gender AS GENDER), :birthdate)",
+            "VALUES (:username, :type, :animal_name, CAST(:gender AS GENDER), :birthdate)" +
+            "RETURNING id",
             nativeQuery = true)
     @Transactional
-    void saveByParams(
+    Long saveByParams(
             @Param("username") String username,
             @Param("type") Long type,
             @Param("animal_name") String animalName,
@@ -31,7 +31,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     @Modifying
     @Query(value = "UPDATE Animals SET\n" +
-            "username = :username, " +
             "animal_type_id = :type, " +
             "animal_name = :animal_name, " +
             "gender = CAST(:gender AS GENDER), " +
@@ -41,7 +40,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
     @Transactional
     void updateByIdByParams(
             @Param("id") Long id,
-            @Param("username") String username,
             @Param("type") Long type,
             @Param("animal_name") String animalName,
             @Param("gender") Character gender,
@@ -53,4 +51,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
     Animal findByAnimalNameAndUsername(String animalName, String username);
 
     Optional<Animal> findByIdAndUsername(Long animalId, String username);
+
+    Animal findByAnimalName(String animalName);
 }

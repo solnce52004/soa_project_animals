@@ -1,7 +1,9 @@
 package ru.example.animals.exception.handler;
 
+import org.hibernate.exception.DataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -12,6 +14,22 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class CustomApiExceptionHandler {
+
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<ResponseDTO> handleDataException(
+            DataException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ResponseDTO> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(AnimalNotFoundException.class)
     public ResponseEntity<ResponseDTO> handleAnimalNotFoundException(
@@ -48,6 +66,14 @@ public class CustomApiExceptionHandler {
     @ExceptionHandler(AnimalNotUniqueException.class)
     public ResponseEntity<ResponseDTO> handleAnimalNotUniqueException(
             AnimalNotUniqueException ex,
+            WebRequest request
+    ) {
+        return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidUsernameException.class)
+    public ResponseEntity<ResponseDTO> handleInvalidUsernameException(
+            InvalidUsernameException ex,
             WebRequest request
     ) {
         return getResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);

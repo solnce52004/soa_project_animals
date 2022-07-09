@@ -1,7 +1,6 @@
 package ru.example.animals.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +22,6 @@ import java.util.Objects;
 @Accessors(chain = true)
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class AnimalDTO implements Serializable {
     private static final long serialVersionUID = -805829958200586923L;
 
@@ -69,32 +67,37 @@ public final class AnimalDTO implements Serializable {
     }
 
     public static Animal dtoMapToExistsAnimal(AnimalDTO dto, Animal animal) {
+        final GenderType gender = GenderType.getOrDefaultGenderName(dto.getGender());
+
         return animal
                 .setUsername(dto.getUsername())
                 .setAnimalName(dto.getAnimalName())
-                .setGender(dto.getGender())
+                .setGender(gender)
                 .setBirthdate(dto.getBirthdate());
     }
 
     public static Animal dtoMapToNewAnimal(AnimalDTO dto) {
+        final GenderType gender = GenderType.getOrDefaultGenderName(dto.getGender());
+
         return new Animal()
                 .setId(dto.getId())
                 .setUsername(dto.getUsername())
                 .setAnimalName(dto.getAnimalName())
-                .setGender(dto.getGender())
+                .setGender(gender)
                 .setBirthdate(dto.getBirthdate());
     }
 
     public static AnimalDTO animalMapToDto(Animal a) {
         final AnimalType type = a.getAnimalType();
         final AnimalTypeDTO mapType = AnimalTypeDTO.animalTypeMapToDto(type);
+        final GenderType gender = GenderType.getOrDefaultGenderName(a.getGender());
 
         return new AnimalDTO()
                 .setId(a.getId())
                 .setUsername(a.getUsername())
                 .setAnimalType(mapType)
                 .setAnimalName(a.getAnimalName())
-                .setGender(a.getGender())
+                .setGender(gender)
                 .setBirthdate(a.getBirthdate());
     }
 }

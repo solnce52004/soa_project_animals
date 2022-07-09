@@ -16,7 +16,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Data
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class ResponseTokenDTO implements Serializable {
     private static final long serialVersionUID = -7615327438712912288L;
 

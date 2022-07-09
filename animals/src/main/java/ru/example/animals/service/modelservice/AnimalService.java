@@ -39,9 +39,8 @@ public class AnimalService {
 
     @Transactional
     public AnimalDTO create(AnimalDTO animalDTO) {
-        final Animal existingAnimal = animalRepository.findByAnimalNameAndUsername(
-                animalDTO.getAnimalName(),
-                animalDTO.getUsername());
+        final Animal existingAnimal = animalRepository.findByAnimalName(
+                animalDTO.getAnimalName());
         //check unique
         if (existingAnimal != null) {
             throw new AnimalNotUniqueException();
@@ -118,20 +117,19 @@ public class AnimalService {
     }
 
     private Animal saveByParams(Animal animal) {
-        animalRepository.saveByParams(
+        final Long id = animalRepository.saveByParams(
                 animal.getUsername(),
                 animal.getAnimalType().getId(),
                 animal.getAnimalName(),
                 animal.getGender().getName(),
                 animal.getBirthdate()
         );
-        return animal;
+        return animal.setId(id);
     }
 
     private Animal updateByParams(Animal animal) {
         animalRepository.updateByIdByParams(
                 animal.getId(),
-                animal.getUsername(),
                 animal.getAnimalType().getId(),
                 animal.getAnimalName(),
                 animal.getGender().getName(),

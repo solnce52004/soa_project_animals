@@ -26,12 +26,12 @@ public class GenderTypeAttributeConverter implements AttributeConverter<GenderTy
     public GenderType convertToEntityAttribute(Character ch) {
         log.info("convertToEntityAttribute {}", ch);
         if (ch == null) {
-            return null;
+            return GenderType.UNTITLED;
         }
 
         return Stream.of(GenderType.values())
                 .filter(c -> c.getName().equals(ch))
                 .findFirst()
-                .orElse(null);
+                .orElse(GenderType.UNTITLED);
     }
 }

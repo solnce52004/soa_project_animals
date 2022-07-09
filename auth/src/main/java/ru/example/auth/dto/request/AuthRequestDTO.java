@@ -14,7 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Data
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AuthRequestDTO implements Serializable {
     private static final long serialVersionUID = -8389039602490794576L;
 

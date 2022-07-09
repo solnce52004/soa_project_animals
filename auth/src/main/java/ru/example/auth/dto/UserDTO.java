@@ -2,7 +2,6 @@ package ru.example.auth.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -22,7 +21,6 @@ import java.util.Set;
 @Accessors(chain = true)
 @EqualsAndHashCode
 @ToString
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 final public class UserDTO implements Serializable {
     private static final long serialVersionUID = -5337617247191253519L;
 
