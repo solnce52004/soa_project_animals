@@ -11,7 +11,8 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @Accessors(chain = true)
-@Getter @Setter
+@Getter
+@Setter
 public final class AnimalTypeDTO implements Serializable {
     private static final long serialVersionUID = 2805268199853829209L;
 
@@ -31,10 +32,20 @@ public final class AnimalTypeDTO implements Serializable {
         return Objects.hash(getTitle());
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
     public static AnimalTypeDTO animalTypeMapToDto(AnimalType animalType) {
         return new AnimalTypeDTO()
                 .setId(animalType.getId())
                 .setTitle(animalType.getTitle());
     }
+
+
 }
 

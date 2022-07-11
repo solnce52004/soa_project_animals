@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * List of animal`s types - already exists in db and immutable
  */
-@Table(name = "animal_types", catalog = "auth_db", schema = "public")
+@Table(name = "animal_types")
 @Entity
 @Getter
 @Setter
@@ -28,7 +28,7 @@ import java.util.Objects;
 public class AnimalType {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title", nullable = false, unique = true)

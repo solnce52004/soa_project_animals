@@ -54,10 +54,8 @@ public class AnimalController {
             @PathVariable("username") String username,
             HttpServletRequest request
     ) {
-        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
-        if (username == null || !username.equals(usernameVerified)) {
-            throw new UserUnauthorizedException();
-        }
+        final String usernameVerified = getUsernameVerified(request);
+        verifyUsernames(username, usernameVerified);
 
         final Set<AnimalDTO> animals = animalService.findAllAnimalsByUsername(username);
 
@@ -89,10 +87,9 @@ public class AnimalController {
             @PathVariable("id") Long animalId,
             HttpServletRequest request
     ) {
-        final AnimalDTO dto = animalService
-                .findAnimalById(new AnimalDTO().setId(animalId));
-
-        verifyRequest(dto.getUsername(), request);
+        final String usernameVerified = getUsernameVerified(request);
+        final AnimalDTO dto = animalService.findAnimalById(new AnimalDTO().setId(animalId));
+        verifyUsernames(dto.getUsername(), usernameVerified);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(dto))
@@ -122,9 +119,9 @@ public class AnimalController {
             @Valid @RequestBody AnimalDTO dto,
             HttpServletRequest request
     ) {
-        final String usernameVerified = verifyRequest(dto.getUsername(), request);
-        final AnimalDTO animal = animalService.create(
-                dto.setUsername(usernameVerified));
+        final String usernameVerified = getUsernameVerified(request);
+        final AnimalDTO animal = animalService.create(dto.setUsername(usernameVerified));
+        verifyUsernames(dto.getUsername(), usernameVerified);
 
         return ResponseEntity.ok(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
@@ -150,7 +147,9 @@ public class AnimalController {
             @Valid @RequestBody PatchAnimalTypeRequestDTO dto,
             HttpServletRequest request
     ) {
-        verifyRequest(dto.getUsername(), request);
+        final String usernameVerified = getUsernameVerified(request);
+        verifyUsernames(dto.getUsername(), usernameVerified);
+
         final Animal updated = animalService.patchAnimalTypeByAnimalId(animalId, dto);
         final AnimalDTO animal = AnimalDTO.animalMapToDto(updated);
 
@@ -178,7 +177,9 @@ public class AnimalController {
             @Valid @RequestBody AnimalDTO dto,
             HttpServletRequest request
     ) {
-        verifyRequest(dto.getUsername(), request);
+        final String usernameVerified = getUsernameVerified(request);
+        verifyUsernames(dto.getUsername(), usernameVerified);
+
         final Animal updated = animalService.put(animalId, dto);
         final AnimalDTO animal = AnimalDTO.animalMapToDto(updated);
 
@@ -205,7 +206,7 @@ public class AnimalController {
             @PathVariable("id") Long animalId,
             HttpServletRequest request
     ) {
-        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
+        final String usernameVerified = getUsernameVerified(request);
         animalService.delete(animalId, usernameVerified);
 
         return ResponseEntity.ok(new ResponseDTO()
@@ -213,18 +214,20 @@ public class AnimalController {
     }
 
     ////////
-    private String verifyRequest(
-            String username,
-            HttpServletRequest request
+    private String getUsernameVerified(HttpServletRequest request) {
+        final String token = request.getHeader(verifyAccessTokenService.HEADER_NAME_AUTHORIZATION);
+        return verifyAccessTokenService.verifyToken(token);
+    }
+
+    private void verifyUsernames(
+            String usernameVerified,
+            String username
     ) {
-        final String usernameVerified = verifyAccessTokenService.verifyRequest(request);
         if (username == null || username.equals("")) {
             throw new InvalidUsernameException();
         }
         if (!username.equals(usernameVerified)) {
             throw new UserUnauthorizedException();
         }
-
-        return usernameVerified;
     }
 }

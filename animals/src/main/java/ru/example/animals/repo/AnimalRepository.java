@@ -18,7 +18,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     @Query(value = "INSERT INTO animals \n" +
             "(username, animal_type_id, animal_name, gender, birthdate) \n" +
-            "VALUES (:username, :type, :animal_name, CAST(:gender AS GENDER), :birthdate) " +
+            "VALUES (:username, :type, :animal_name, CAST(:gender AS GENDER), CAST(:birthdate AS TIMESTAMP)) " +
             "RETURNING id",
             nativeQuery = true)
     @Transactional
@@ -30,12 +30,25 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
             @Param("birthdate") Date birthdate
     );
 
+    @Query(value = "INSERT INTO animals \n" +
+            "(username, animal_type_id, animal_name, birthdate) \n" +
+            "VALUES (:username, :type, :animal_name, CAST(:birthdate AS TIMESTAMP)) " +
+            "RETURNING id",
+            nativeQuery = true)
+    @Transactional
+    Long saveWithoutGender(
+            @Param("username") String username,
+            @Param("type") Long type,
+            @Param("animal_name") String animalName,
+            @Param("birthdate") Date birthdate
+    );
+
     @Modifying
     @Query(value = "UPDATE animals SET \n" +
             "animal_type_id = :type, " +
             "animal_name = :animal_name, " +
             "gender = CAST(:gender AS GENDER), " +
-            "birthdate = :birthdate\n" +
+            "birthdate = CAST(:birthdate AS TIMESTAMP)\n" +
             "WHERE id = :id",
             nativeQuery = true)
     @Transactional

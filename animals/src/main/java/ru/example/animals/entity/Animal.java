@@ -16,7 +16,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
-@Table(name = "animals", catalog = "auth_db", schema = "public")
+@Table(name = "animals")
 @Entity
 @Getter
 @Setter
@@ -28,7 +28,7 @@ import java.util.Objects;
 public class Animal {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username", nullable = false)

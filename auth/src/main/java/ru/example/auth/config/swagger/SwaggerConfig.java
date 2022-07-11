@@ -13,6 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Configuration
 @EnableSwagger2
@@ -25,7 +26,8 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(metaData())
-                .securitySchemes(Collections.singletonList(apiKey()));
+                .securitySchemes(Collections.singletonList(apiKey()))
+                .genericModelSubstitutes(Optional.class);
     }
 
     private ApiInfo metaData() {
@@ -42,6 +44,6 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("Bearer ", "Authorization", "header");
+        return new ApiKey("Bearer %token", "Authorization", "Header");
     }
 }

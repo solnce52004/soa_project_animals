@@ -22,6 +22,14 @@ public class AnimalService {
     private final AnimalTypeRepository animalTypeRepository;
     private final UserService userService;
 
+    public Set<AnimalDTO> findAllAnimalsByUsername(String username) {
+        return animalRepository.findAllByUsername(username)
+                .orElseThrow(AnimalNotFoundException::new)
+                .stream()
+                .map(AnimalDTO::animalMapToDto)
+                .collect(Collectors.toSet());
+    }
+
     public AnimalDTO findAnimalById(AnimalDTO animalDTO) {
         final Animal animal = animalRepository.findById(animalDTO.getId())
                 .orElseThrow(AnimalNotFoundException::new);
@@ -59,7 +67,6 @@ public class AnimalService {
         return AnimalDTO.animalMapToDto(animal);
     }
 
-
     //patch
     @Transactional
     public Animal patchAnimalTypeByAnimalId(Long id, PatchAnimalTypeRequestDTO dto) {
@@ -91,8 +98,8 @@ public class AnimalService {
         return animal.setAnimalType(typeDb);
     }
 
-
     //put
+    @Transactional
     public Animal put(Long id, AnimalDTO dto) {
         //by id
         final Animal existingAnimal = animalRepository.findById(id)
@@ -130,6 +137,7 @@ public class AnimalService {
         return updateByParams(mapped);
     }
 
+    @Transactional
     public void delete(Long animalId, String username) {
         final Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(AnimalNotFoundException::new);
@@ -141,15 +149,7 @@ public class AnimalService {
         animalRepository.delete(animal);
     }
 
-    public Set<AnimalDTO> findAllAnimalsByUsername(String username) {
-        return animalRepository.findAllByUsername(username)
-                .orElseThrow(AnimalNotFoundException::new)
-                .stream()
-                .map(AnimalDTO::animalMapToDto)
-                .collect(Collectors.toSet());
-    }
-
-    private Animal saveByParams(Animal animal) {
+    public Animal saveByParams(Animal animal) {
         final Long id = animalRepository.saveByParams(
                 animal.getUsername(),
                 animal.getAnimalType().getId(),
@@ -160,7 +160,7 @@ public class AnimalService {
         return animal.setId(id);
     }
 
-    private Animal updateByParams(Animal animal) {
+    public Animal updateByParams(Animal animal) {
         animalRepository.updateByIdByParams(
                 animal.getId(),
                 animal.getAnimalType().getId(),

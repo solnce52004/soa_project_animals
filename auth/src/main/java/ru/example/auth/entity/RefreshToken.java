@@ -28,7 +28,7 @@ public class RefreshToken implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @JsonIgnore

@@ -14,13 +14,12 @@ import org.springframework.web.client.RestTemplate;
 import ru.example.animals.dto.response.VerifyTokenResponseDTO;
 import ru.example.animals.exception.custom_exception.VerifyTokenException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 @Slf4j
 @Service
 public class VerifyAccessTokenService {
-    private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
+    public final String HEADER_NAME_AUTHORIZATION = "Authorization";
     private final String authUrlVerifyToken;
 
     @Autowired
@@ -29,9 +28,9 @@ public class VerifyAccessTokenService {
         this.authUrlVerifyToken = authVerifyTokenUrl;
     }
 
-    public String verifyRequest(HttpServletRequest request) {
+    public String verifyToken(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_NAME_AUTHORIZATION, request.getHeader(HEADER_NAME_AUTHORIZATION));
+        headers.set(HEADER_NAME_AUTHORIZATION, token);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> requestToken = new HttpEntity<>(headers);

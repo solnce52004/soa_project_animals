@@ -12,26 +12,20 @@ server:
     whitelabel:
       enabled: false
 
-#http://localhost:8020/auth/swagger-ui/
-springfox:
-  documentation:
-    swagger-ui:
-      enabled: true
-
 spring:
   profiles:
     ############
     active: dev
     ############
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_db
+    url: jdbc:postgresql://localhost:5432/auth_db_test
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: true
-    url: jdbc:postgresql://localhost:5432/auth_db
+    url: jdbc:postgresql://localhost:5432/auth_db_test
     user: ${DB_USER}
     password: ${DB_PASSWORD}
     fail-on-missing-locations: true
@@ -61,7 +55,7 @@ spring:
           order_inserts: true
           order_updates: true
 
-  jackson:
+    jackson:
       serialization:
         indent-output: true
         write_dates_as_timestamps: false
@@ -71,15 +65,10 @@ spring:
 logging:
   config: classpath:log4j2.properties
 
-# TODO: вынести в параметры
-jwt:
-  secret-key: "authsecret-lsdfahksdjfhkljsdfkjsdhfaslkjdhfkajlsdfha-skldjhfa-sldkfhaslcxkvh-dgfasdkfjhkjh"
-  access-expires-at: 3600000
-  refresh-expires-at: 86400000
-
-sign-in:
-  tries: 10
-  expire: 3600000
+auth:
+  server:
+    url:
+      verify-token: "http://localhost:8020/auth/api/v1/verify/token"
 
 ---
 #DEV

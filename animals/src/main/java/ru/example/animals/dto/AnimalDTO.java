@@ -2,10 +2,7 @@ package ru.example.animals.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
@@ -45,7 +42,9 @@ public final class AnimalDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AnimalDTO animalDTO = (AnimalDTO) o;
-        return getUsername().equals(animalDTO.getUsername()) &&
+        return Objects.equals(getId(), animalDTO.getId()) &&
+                getUsername().equals(animalDTO.getUsername()) &&
+                Objects.equals(getAnimalType(), animalDTO.getAnimalType()) &&
                 getAnimalName().equals(animalDTO.getAnimalName()) &&
                 getGender() == animalDTO.getGender() &&
                 Objects.equals(getBirthdate(), animalDTO.getBirthdate());
@@ -53,27 +52,24 @@ public final class AnimalDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getAnimalName(), getGender(), getBirthdate());
+        return Objects.hash(getId(), 
+                getUsername(),
+                getAnimalType(),
+                getAnimalName(),
+                getGender(),
+                getBirthdate());
     }
 
     @Override
     public String toString() {
-        return "AnimalDTO{" +
-                "username='" + username + '\'' +
-                ", name='" + animalName + '\'' +
+        return "{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", animalType=" + animalType +
+                ", animalName='" + animalName + '\'' +
                 ", gender=" + gender +
                 ", birthdate=" + birthdate +
                 '}';
-    }
-
-    public static Animal dtoMapToExistsAnimal(AnimalDTO dto, Animal animal) {
-        final GenderType gender = GenderType.getOrDefaultGenderName(dto.getGender());
-
-        return animal
-                .setUsername(dto.getUsername())
-                .setAnimalName(dto.getAnimalName())
-                .setGender(gender)
-                .setBirthdate(dto.getBirthdate());
     }
 
     public static Animal dtoMapToNewAnimal(AnimalDTO dto) {
