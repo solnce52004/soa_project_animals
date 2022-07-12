@@ -71,11 +71,7 @@ spring:
 logging:
   config: classpath:log4j2.properties
 
-auth:
-  server:
-    url:
-      verify-token: "http://localhost:8020/auth/api/v1/verify/token"
-
+verify-token-url: http://localhost:8020/auth/api/v1/verify/token
 ---
 #DEV
 spring:

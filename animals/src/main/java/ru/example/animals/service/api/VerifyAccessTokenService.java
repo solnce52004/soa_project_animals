@@ -1,7 +1,6 @@
 package ru.example.animals.service.api;
 
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -16,16 +15,20 @@ import ru.example.animals.exception.custom_exception.VerifyTokenException;
 
 import java.util.Collections;
 
-@Slf4j
 @Service
 public class VerifyAccessTokenService {
     public final String HEADER_NAME_AUTHORIZATION = "Authorization";
-    private final String authUrlVerifyToken;
+    public final String authUrlVerifyToken;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public VerifyAccessTokenService(
-            @Value("${auth.server.url.verify-token}") String authVerifyTokenUrl) {
-        this.authUrlVerifyToken = authVerifyTokenUrl;
+            @Value("${verify-token-url}")
+                    String authUrlVerifyToken,
+            RestTemplate restTemplate
+    ) {
+        this.authUrlVerifyToken = authUrlVerifyToken;
+        this.restTemplate = restTemplate;
     }
 
     public String verifyToken(String token) {
@@ -37,7 +40,7 @@ public class VerifyAccessTokenService {
 
         ResponseEntity<VerifyTokenResponseDTO> response;
         try {
-            response = new RestTemplate()
+            response = restTemplate
                     .postForEntity(
                             this.authUrlVerifyToken,
                             requestToken,
@@ -48,7 +51,7 @@ public class VerifyAccessTokenService {
             throw new VerifyTokenException(deserializeException(e));
         }
 
-        if (!response.hasBody() || response.getBody() == null) {
+        if (response == null || !response.hasBody() || response.getBody() == null) {
             throw new VerifyTokenException();
         }
 
