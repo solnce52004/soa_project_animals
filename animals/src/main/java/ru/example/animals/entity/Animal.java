@@ -75,18 +75,18 @@ public class Animal {
     @ColumnDefault("CURRENT_TIMESTAMP")
     private Date updatedAt;
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Animal animal = (Animal) o;
-        return getAnimalName().equals(animal.getAnimalName()) &&
-                Objects.equals(getGender(), animal.getGender()) &&
-                Objects.equals(getBirthdate(), animal.getBirthdate());
+        return getUsername().equals(animal.getUsername()) &&
+                getAnimalName().equals(animal.getAnimalName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAnimalName(), getGender(), getBirthdate());
+        return Objects.hash(getUsername(), getAnimalName());
     }
 
     @Override

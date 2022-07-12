@@ -1,5 +1,6 @@
 package ru.example.animals.controller;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,17 +8,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.example.animals.controller.util.AnimalUtil;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
-import ru.example.animals.enums.GenderType;
 import ru.example.animals.repo.AnimalRepository;
 import ru.example.animals.repo.AnimalTypeRepository;
 import ru.example.animals.service.modelservice.AnimalService;
-
-import java.sql.Timestamp;
-import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -27,6 +26,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class JpaTest {
 
+    private static final String ANIMAL_TYPE_DOG = "dog";
+    private static final String ANIMAL_TYPE_CAT = "cat";
     @MockBean
     AnimalService animalService;
     @Autowired
@@ -62,20 +63,29 @@ public class JpaTest {
 //    }
 
     @Test
-    public void createAnimalTest() {
-        AnimalType type = animalTypeRepository.findByTitle("cat").orElse(null);
-        if (type == null) {
-            type = this.testEntityManager.persistAndFlush(
-                    new AnimalType().setTitle("cat"));
-        }
+    public void testAnimalExistsExceptionIsThrown() {
+        final Animal animal1 = buildAnimalWithPersistedType(
+                "user_1", "Tom_1", ANIMAL_TYPE_CAT);
+        final Animal animal2 = buildAnimalWithPersistedType(
+                "user_1", "Tom_1", ANIMAL_TYPE_CAT);
 
-        final Animal newAnimal = buildAnimal(
-                getRandomUsername(),
-                getRandomAnimalName(),
-                type);
+        AssertionsForClassTypes.assertThatExceptionOfType(
+                DataIntegrityViolationException.class).isThrownBy(
+                () -> {
+                    saveAnimal(animal1);
+                    saveAnimal(animal2);
+                });
+    }
+
+    @Test
+    public void createAnimalTest() {
+        final Animal newAnimal = buildAnimalWithPersistedType(
+                AnimalUtil.getRandomUsername(),
+                AnimalUtil.getRandomAnimalName(),
+                ANIMAL_TYPE_DOG);
 
         final Animal savedAnimal = saveAnimal(newAnimal);
-        this.testEntityManager.flush();
+//        this.testEntityManager.flush();
 
         final Animal animalById = animalRepository.findById(savedAnimal.getId())
                 .orElse(null);
@@ -89,35 +99,24 @@ public class JpaTest {
                 .isEqualTo(animalById);
     }
 
-    public static String getRandomUsername() {
-        return "test_" + Math.random();
-    }
-
-    public String getRandomAnimalName() {
-        return "pet_" + Math.random();
-    }
-
-    private Animal buildAnimal(
+    private Animal buildAnimalWithPersistedType(
             String username,
             String animalName,
-            AnimalType animalType
+            String animalType
     ) {
-        Timestamp stamp = new Timestamp(System.currentTimeMillis());
-        Date date = new Date(stamp.getTime());
+        AnimalType type = animalTypeRepository.findByTitle(animalType).orElseGet(
+                () -> this.testEntityManager.persistAndFlush(
+                        new AnimalType().setTitle(animalType)));
 
-        return new Animal()
-                .setUsername(username)
-                .setAnimalName(animalName)
-                .setAnimalType(animalType)
-                .setGender(GenderType.UNTITLED)
-                .setBirthdate(date);
+        return AnimalUtil.initAnimalWithDefaultBirthdate(username, animalName, type);
     }
 
     private Animal saveAnimal(Animal animal) {
-        final Long id = animalRepository.saveWithoutGender(
+        final Long id = animalRepository.saveByParams(
                 animal.getUsername(),
                 animal.getAnimalType().getId(),
                 animal.getAnimalName(),
+                animal.getGender().getName(),
                 animal.getBirthdate()
         );
         return animal.setId(id);

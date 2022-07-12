@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.example.animals.dto.AnimalDTO;
 import ru.example.animals.dto.request.PatchAnimalTypeRequestDTO;
 import ru.example.animals.dto.response.ResponseDTO;
-import ru.example.animals.entity.Animal;
 import ru.example.animals.exception.custom_exception.InvalidUsernameException;
 import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
 import ru.example.animals.service.api.VerifyAccessTokenService;
@@ -88,7 +87,7 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = getUsernameVerified(request);
-        final AnimalDTO dto = animalService.findAnimalById(new AnimalDTO().setId(animalId));
+        final AnimalDTO dto = animalService.findAnimalById(animalId);
         verifyUsernames(dto.getUsername(), usernameVerified);
 
         return ResponseEntity.ok(new ResponseDTO()
@@ -121,11 +120,11 @@ public class AnimalController {
     ) {
         final String usernameVerified = getUsernameVerified(request);
         final AnimalDTO animal = animalService.create(dto.setUsername(usernameVerified));
-        verifyUsernames(dto.getUsername(), usernameVerified);
 
-        return ResponseEntity.ok(new ResponseDTO()
+        return new ResponseEntity<>(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
-                .setHttpStatus(HttpStatus.CREATED));
+                .setHttpStatus(HttpStatus.CREATED),
+                HttpStatus.CREATED);
     }
 
     @Operation(method = "Change animal type",
@@ -150,12 +149,12 @@ public class AnimalController {
         final String usernameVerified = getUsernameVerified(request);
         verifyUsernames(dto.getUsername(), usernameVerified);
 
-        final Animal updated = animalService.patchAnimalTypeByAnimalId(animalId, dto);
-        final AnimalDTO animal = AnimalDTO.animalMapToDto(updated);
+        final AnimalDTO animal = animalService.patchAnimalTypeByAnimalId(animalId, dto);
 
-        return ResponseEntity.ok(new ResponseDTO()
+        return new ResponseEntity<>(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
-                .setHttpStatus(HttpStatus.ACCEPTED));
+                .setHttpStatus(HttpStatus.ACCEPTED),
+                HttpStatus.ACCEPTED);
     }
 
     @Operation(method = "PUT",
@@ -180,12 +179,12 @@ public class AnimalController {
         final String usernameVerified = getUsernameVerified(request);
         verifyUsernames(dto.getUsername(), usernameVerified);
 
-        final Animal updated = animalService.put(animalId, dto);
-        final AnimalDTO animal = AnimalDTO.animalMapToDto(updated);
+        final AnimalDTO animal = animalService.put(animalId, dto);
 
-        return ResponseEntity.ok(new ResponseDTO()
+        return new ResponseEntity<>(new ResponseDTO()
                 .setAnimals(Collections.singleton(animal))
-                .setHttpStatus(HttpStatus.ACCEPTED));
+                .setHttpStatus(HttpStatus.ACCEPTED),
+                HttpStatus.ACCEPTED);
     }
 
     @Operation(method = "DELETE",
@@ -209,8 +208,9 @@ public class AnimalController {
         final String usernameVerified = getUsernameVerified(request);
         animalService.delete(animalId, usernameVerified);
 
-        return ResponseEntity.ok(new ResponseDTO()
-                .setHttpStatus(HttpStatus.ACCEPTED));
+        return new ResponseEntity<>(new ResponseDTO()
+                .setHttpStatus(HttpStatus.ACCEPTED),
+                HttpStatus.ACCEPTED);
     }
 
     ////////
