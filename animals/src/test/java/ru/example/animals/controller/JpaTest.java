@@ -1,7 +1,10 @@
 package ru.example.animals.controller;
 
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -24,6 +27,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class JpaTest {
 
     private static final String ANIMAL_TYPE_DOG = "dog";
@@ -38,17 +42,14 @@ public class JpaTest {
     TestEntityManager testEntityManager;
 
     @Test
+    @Order(1)
     public void pingDbTest() {
         assertThat(animalRepository).isNotNull();
         assertThat(animalTypeRepository).isNotNull();
     }
 
-    @Test
-    public void helloTest() {
-        System.out.println("Hello");
-    }
-
-//    @Before
+//    @Test
+//    @Order(2)
 //    public void resetDb() {
 //        animalRepository.deleteAll();
 //        animalTypeRepository.deleteAll();
