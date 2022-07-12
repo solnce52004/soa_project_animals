@@ -18,7 +18,7 @@ import java.util.Collections;
 @Service
 public class VerifyAccessTokenService {
     public final String HEADER_NAME_AUTHORIZATION = "Authorization";
-    public final String authUrlVerifyToken;
+    private final String authUrlVerifyToken;
     private final RestTemplate restTemplate;
 
     @Autowired

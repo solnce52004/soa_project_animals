@@ -2,7 +2,6 @@ package ru.example.animals.service.api;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.example.animals.controller.util.AnimalUtil;
 import ru.example.animals.dto.response.VerifyTokenResponseDTO;
+
+import static org.mockito.ArgumentMatchers.*;
 
 @SpringBootTest
 class VerifyAccessTokenServiceTest {
@@ -34,9 +35,9 @@ class VerifyAccessTokenServiceTest {
         final ResponseEntity<VerifyTokenResponseDTO> ok = ResponseEntity.ok(verifiedDTO);
 
         Mockito.when(restTemplate.postForEntity(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.same(VerifyTokenResponseDTO.class)
+                anyString(),
+                any(),
+                same(VerifyTokenResponseDTO.class)
         ))
                 .thenReturn(ok);
 

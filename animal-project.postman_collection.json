@@ -1,0 +1,538 @@
+{
+	"info": {
+		"_postman_id": "ec236c50-c0f7-4580-9cf8-f97416b79802",
+		"name": "animal-project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "animals",
+			"item": [
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal/user/rty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal/user/rty",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal",
+								"user",
+								"rty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalName\": \"Barsik000\",\n  \"animalType\": {\n    \"title\": \"cat\"\n  },\n  \"birthdate\": \"2022-01-01 01:01:01\",\n  \"gender\": \"MALE\",\n  \"username\": \"rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal/26",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": {\n    \"title\": \"cat\"\n  },\n  \"username\": \"rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal/31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal/4",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalName\": \"Barsik0\",\n  \"animalType\": {\n    \"title\": \"dog\"\n  },\n  \"birthdate\": \"5555-01-01 01:01:01\",\n  \"gender\": \"MALE\",\n  \"username\": \"rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal/31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8030/animals/api/v1/animal/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8030/animals/api/v1/animal/30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8030",
+							"path": [
+								"animals",
+								"api",
+								"v1",
+								"animal",
+								"30"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "http://localhost:8020/auth/api/v1/login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"123\",\n  \"username\": \"rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8020/auth/api/v1/logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accessToken\": \"{{access_token}}\",\n  \"refreshToken\": \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8020/auth/api/v1/verify/token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/verify/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"verify",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8020/auth/api/v1/registration",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"456\",\n  \"username\": \"2232rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/registration",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8020/auth/api/v1/validate/username",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"22rty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/validate/username",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"validate",
+								"username"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8020/auth/api/v1/refresh-token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8020/auth/api/v1/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8020",
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}

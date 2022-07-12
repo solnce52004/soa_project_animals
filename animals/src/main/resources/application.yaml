@@ -42,7 +42,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     generate-ddl: true
-    show-sql: false
+    show-sql: true
     open-in-view: false
     hibernate:
       ############
@@ -51,8 +51,8 @@ spring:
     properties:
       hibernate:
         generate_statistics: true
-        current_session_context_class: "thread"
-        default_batch_fetch_size: 20
+        current_session_context_class: thread
+        default_batch_fetch_size: 5
         format_sql: true
         connection:
           autocommit: false
@@ -60,6 +60,9 @@ spring:
           batch_size: 10
           order_inserts: true
           order_updates: true
+          batch_versioned_data: true
+#        id:
+#          new_generator_mappings: false
 
   jackson:
     serialization:

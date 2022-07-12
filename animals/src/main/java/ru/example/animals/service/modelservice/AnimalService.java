@@ -120,14 +120,14 @@ public class AnimalService {
                 .orElseThrow(AnimalTypeNotFoundException::new);
 
         // mapping all
-        final Animal mapped = existingAnimal
+        final Animal mappedToSave = AnimalDTO.animalMapToNewAnimal(existingAnimal)
                 .setUsername(dto.getUsername())
                 .setAnimalName(dto.getAnimalName())
                 .setAnimalType(type)
                 .setGender(GenderType.getOrDefaultGenderName(dto.getGender()))
                 .setBirthdate(dto.getBirthdate());
 
-        final Animal updated = updateByParams(mapped);
+        final Animal updated = updateByParams(mappedToSave);
         return AnimalDTO.animalMapToDto(updated);
     }
 
@@ -153,7 +153,7 @@ public class AnimalService {
                 animal.getUsername(),
                 animal.getAnimalType().getId(),
                 animal.getAnimalName(),
-                animal.getGender().getName(),
+                GenderType.getOrDefaultGenderName(animal.getGender()).getName(),
                 animal.getBirthdate()
         );
         return animal.setId(id);

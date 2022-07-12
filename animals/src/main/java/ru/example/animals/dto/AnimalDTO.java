@@ -73,6 +73,18 @@ public final class AnimalDTO implements Serializable {
                 '}';
     }
 
+    public static Animal animalMapToNewAnimal(Animal old) {
+        return new Animal()
+                .setId(old.getId())
+                .setUsername(old.getUsername())
+                .setAnimalName(old.getAnimalName())
+                .setAnimalType(old.getAnimalType())
+                .setGender(old.getGender())
+                .setBirthdate(old.getBirthdate())
+                .setUpdatedAt(old.getUpdatedAt())
+                .setCreatedAt(old.getCreatedAt());
+    }
+
     public static Animal dtoMapToNewAnimal(AnimalDTO dto) {
         final GenderType gender = GenderType.getOrDefaultGenderName(dto.getGender());
 

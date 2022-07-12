@@ -2,7 +2,6 @@ package ru.example.animals.controller;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,26 +41,10 @@ public class JpaTest {
     TestEntityManager testEntityManager;
 
     @Test
-    @Order(1)
     public void pingDbTest() {
         assertThat(animalRepository).isNotNull();
         assertThat(animalTypeRepository).isNotNull();
     }
-
-//    @Test
-//    @Order(2)
-//    public void resetDb() {
-//        animalRepository.deleteAll();
-//        animalTypeRepository.deleteAll();
-//        seedAnimalType();
-//    }
-
-//    private void seedAnimalType() {
-//        animalTypeRepository.saveAll(Arrays.asList(
-//                new AnimalType().setTitle("cat"),
-//                new AnimalType().setTitle("dog"),
-//                new AnimalType().setTitle("bear")));
-//    }
 
     @Test
     public void testAnimalExistsExceptionIsThrown() {

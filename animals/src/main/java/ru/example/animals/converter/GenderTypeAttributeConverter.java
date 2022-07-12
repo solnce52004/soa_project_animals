@@ -15,7 +15,7 @@ public class GenderTypeAttributeConverter implements AttributeConverter<GenderTy
 
     @Override
     public Character convertToDatabaseColumn(GenderType enumObject) {
-        log.info("convertToDatabaseColumn {}", enumObject);
+        log.info("convertToDatabaseColumn: got {}", enumObject);
         if (enumObject == null) {
             return null;
         }
@@ -24,7 +24,7 @@ public class GenderTypeAttributeConverter implements AttributeConverter<GenderTy
 
     @Override
     public GenderType convertToEntityAttribute(Character ch) {
-        log.info("convertToEntityAttribute {}", ch);
+        log.info("convertToEntityAttribute: got {}", ch);
         if (ch == null) {
             return GenderType.UNTITLED;
         }
