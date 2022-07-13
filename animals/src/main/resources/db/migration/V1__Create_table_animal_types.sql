@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION "add_comments"()
     RETURNS VOID AS
 $$
 BEGIN
-    COMMENT ON TABLE "animal_types" IS 'Список-справочник видов животных';
+    COMMENT ON TABLE "animal_types" IS 'List-directory of animal species';
 END
 $$ LANGUAGE "plpgsql";
 

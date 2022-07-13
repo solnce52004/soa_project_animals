@@ -22,6 +22,9 @@ ALTER SEQUENCE IF EXISTS "animal_types_id_seq" OWNED BY "animal_types"."id";
 ALTER TABLE IF EXISTS ONLY "animal_types"
     ALTER COLUMN "id" SET DEFAULT NEXTVAL('animal_types_id_seq'::REGCLASS);
 
+CREATE INDEX IF NOT EXISTS "animal_types_title_index"
+    ON "animal_types" ("title");
+
 ALTER TABLE "animal_types"
     OWNER TO "animal";
 
@@ -30,7 +33,7 @@ CREATE OR REPLACE FUNCTION "add_comments"()
     RETURNS VOID AS
 $$
 BEGIN
-    COMMENT ON TABLE "animal_types" IS 'Список-справочник видов животных';
+    COMMENT ON TABLE "animal_types" IS 'List-directory of animal species';
 END
 $$ LANGUAGE "plpgsql";
 

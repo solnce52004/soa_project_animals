@@ -75,7 +75,7 @@ logging:
 jwt:
   secret-key: "authsecret-lsdfahksdjfhkljsdfkjsdhfaslkjdhfkajlsdfha-skldjhfa-sldkfhaslcxkvh-dgfasdkfjhkjh"
   access-expires-at: 3600000
-  refresh-expires-at: 86400000
+  refresh-expires-at: 8640000
 
 sign-in:
   tries: 10
