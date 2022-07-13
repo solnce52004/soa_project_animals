@@ -38,7 +38,15 @@ public class JpaTest {
     private AnimalTypeRepository animalTypeRepository;
     @Autowired
     TestEntityManager testEntityManager;
+//    @Autowired
+//    Flyway flyway;
 
+//    @BeforeEach
+//    public void setup() {
+//        flyway.clean();
+//        flyway.migrate();
+//    }
+//
     @Test
     public void pingDbTest() {
         assertThat(animalRepository).isNotNull();

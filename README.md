@@ -90,11 +90,18 @@
 
 В файлах конфигурации модулей application.yaml установить флаг, разрешающий выполнять миграции.<br>
 Проверить допустимость для системы прочих настроек.<br>
-Выполнить команду в корне проекта: mvn clean package -DDB_USER=animal -DDB_PASSWORD=animal<br>
+Выполнить команду в корне проекта: 
+
+    mvn clean package -DDB_USER=animal -DDB_PASSWORD=animal
+
 Запустить созданные в модулях jar-файлы, выполнив команды из корня (например):<br>
 
         java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./auth/target/auth-0.0.1-SNAPSHOT.jar
         java -jar -DDB_USER=animal -DDB_PASSWORD=animal ./animals/target/animals-0.0.1-SNAPSHOT.jar
+
+#### В корне каждого модуля сохранен скомпилированный jar-файл
+[animals-0.0.1-SNAPSHOT.jar](animals/animals-0.0.1-SNAPSHOT.jar)
+[auth-0.0.1-SNAPSHOT.jar](auth/auth-0.0.1-SNAPSHOT.jar)
 
 #### Коллекции для тестирования в Postman
 [animal-project.postman_collection.json](animal-project.postman_collection.json)
