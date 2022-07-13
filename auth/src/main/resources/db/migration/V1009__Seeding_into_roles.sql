@@ -1,0 +1,8 @@
+BEGIN TRANSACTION;
+
+INSERT INTO "roles" ("title")
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_USER'),
+       ('ROLE_ANONYMOUS');
+
+COMMIT;

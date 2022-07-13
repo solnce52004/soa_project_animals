@@ -26,7 +26,6 @@ public class CheckUsernameRequestDTO implements Serializable {
 
 
     public static CheckUsernameRequestDTO clean(CheckUsernameRequestDTO requestDTO) {
-        return requestDTO
-                .setUsername(requestDTO.getUsername().trim());
+        return requestDTO.setUsername(requestDTO.getUsername().trim());
     }
 }

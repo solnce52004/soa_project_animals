@@ -1,7 +1,7 @@
 package ru.example.auth.config.security;
 
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,13 +28,21 @@ import ru.example.auth.config.security.jwt.JwtConfigurer;
         securedEnabled = true,
         jsr250Enabled = true
 )
-@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtConfigurer jwtConfigurer;
-
-    @Qualifier("userDetailsServiceImpl")
     private final UserDetailsService userDetailsService;
+    private final JwtConfigurer jwtConfigurer;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Autowired
+    public SecurityConfig(
+            @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+            JwtConfigurer jwtConfigurer,
+            RestAuthenticationEntryPoint restAuthenticationEntryPoint
+    ) {
+        this.userDetailsService = userDetailsService;
+        this.jwtConfigurer = jwtConfigurer;
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

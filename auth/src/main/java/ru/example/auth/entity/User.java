@@ -14,17 +14,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "users", catalog = "auth_db", schema = "public")
+@Table(name = "users")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @Accessors(chain = true)
-@EqualsAndHashCode(exclude = {"id", "roles"})
-@ToString(exclude = {"id", "roles"})
 @DynamicUpdate
 @DynamicInsert
 public class User implements Serializable {
@@ -85,5 +83,27 @@ public class User implements Serializable {
         }
 
         return authorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return getUsername().equals(user.getUsername()) &&
+                getPassword().equals(user.getPassword());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getPassword());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

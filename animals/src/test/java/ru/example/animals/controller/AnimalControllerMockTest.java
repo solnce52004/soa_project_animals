@@ -24,14 +24,15 @@ import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.example.animals.controller.util.AnimalUtil.*;
 
 @WebMvcTest(controllers = {AnimalController.class})
 class AnimalControllerMockTest {
 
-    private static final String USERNAME_VERIFIED = AnimalUtil.USERNAME;
+    private static final String USERNAME_VERIFIED = USERNAME;
     private static final String BEARER_TOKEN = "Bearer token";
-    private static final AnimalDTO testAnimal1 = AnimalUtil.initAnimal(1L, "Barsik");
-    private static final AnimalDTO testAnimal2 = AnimalUtil.initAnimal(2L, "Barsik2");
+    private static final AnimalDTO testAnimal1 = initAnimal(1L, "Barsik");
+    private static final AnimalDTO testAnimal2 = initAnimal(2L, "Barsik2");
     private static final String AUTHORIZATION = "Authorization";
     private static final long ANIMAL_ID = 1L;
 
@@ -58,7 +59,7 @@ class AnimalControllerMockTest {
                 .thenReturn(animals);
 
         mvc.perform(get("/api/v1/animal/user/" + USERNAME_VERIFIED)
-                .header("Authorization", "Bearer token")
+                .header("Authorization", BEARER_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(jsonPath("$.animals.[0]").value(testAnimal1))
@@ -72,7 +73,7 @@ class AnimalControllerMockTest {
                 .thenReturn(testAnimal1);
 
         mvc.perform(get("/api/v1/animal/" + ANIMAL_ID)
-                .header("Authorization", "Bearer token")
+                .header("Authorization", BEARER_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(jsonPath("$.animals.[0]").value(testAnimal1))
@@ -85,7 +86,7 @@ class AnimalControllerMockTest {
                 .thenReturn(testAnimal1);
 
         mvc.perform(post("/api/v1/animal")
-                .header(AUTHORIZATION, "Bearer token")
+                .header(AUTHORIZATION, BEARER_TOKEN)
                 .content(new ObjectMapper().writeValueAsString(testAnimal1))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +108,7 @@ class AnimalControllerMockTest {
                 .thenReturn(updated);
 
         mvc.perform(patch("/api/v1/animal/" + ANIMAL_ID)
-                .header(AUTHORIZATION, "Bearer token")
+                .header(AUTHORIZATION, BEARER_TOKEN)
                 .content(new ObjectMapper().writeValueAsString(patch))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +124,7 @@ class AnimalControllerMockTest {
                 .thenReturn(testAnimal1);
 
         mvc.perform(put("/api/v1/animal/" + ANIMAL_ID)
-                .header(AUTHORIZATION, "Bearer token")
+                .header(AUTHORIZATION, BEARER_TOKEN)
                 .content(new ObjectMapper().writeValueAsString(testAnimal1))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -140,7 +141,7 @@ class AnimalControllerMockTest {
                 .delete(ANIMAL_ID, USERNAME_VERIFIED);
 
         mvc.perform(delete("/api/v1/animal/" + ANIMAL_ID)
-                .header(AUTHORIZATION, "Bearer token")
+                .header(AUTHORIZATION, BEARER_TOKEN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         )

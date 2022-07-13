@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -30,12 +29,21 @@ import javax.validation.Valid;
 
 @Api(tags = "Auth", value = "AuthController")
 @RestController
-@RequestMapping("/api/v1/")
-@AllArgsConstructor
+@RequestMapping("/api/v1")
 public class AuthController {
     private final AuthService authService;
     private final SignInLogService signInLogService;
     private final JwtAccessTokenProvider jwtAccessTokenProvider;
+
+    public AuthController(
+            AuthService authService,
+            SignInLogService signInLogService,
+            JwtAccessTokenProvider jwtAccessTokenProvider
+    ) {
+        this.authService = authService;
+        this.signInLogService = signInLogService;
+        this.jwtAccessTokenProvider = jwtAccessTokenProvider;
+    }
 
     @Operation(method = "POST",
             description = "Validate Username",
@@ -57,11 +65,10 @@ public class AuthController {
         requestDTO = CheckUsernameRequestDTO.clean(requestDTO);
         authService.checkIfExistsUsername(requestDTO.getUsername());
 
-        ResponseDTO responseDTO = new ResponseDTO()
+        return new ResponseEntity<>(new ResponseDTO()
                 .setUsername(requestDTO.getUsername())
-                .setHttpStatus(HttpStatus.ACCEPTED);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.ACCEPTED);
+                .setHttpStatus(HttpStatus.ACCEPTED),
+                HttpStatus.ACCEPTED);
     }
 
     @Operation(method = "POST",
@@ -85,13 +92,12 @@ public class AuthController {
         authService.checkIfExistsUsername(authRequestDTO.getUsername());
         final UserDTO user = authService.registerUser(authRequestDTO);
 
-        TokenResponseDTO responseDTO = new TokenResponseDTO()
+        return new ResponseEntity<>(new TokenResponseDTO()
                 .setAccessToken(user.getAccessToken())
                 .setRefreshToken(user.getRefreshToken())
                 .setUsername(user.getUsername())
-                .setHttpStatus(HttpStatus.CREATED);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+                .setHttpStatus(HttpStatus.CREATED),
+                HttpStatus.CREATED);
     }
 
     @Operation(method = "POST",
@@ -140,8 +146,9 @@ public class AuthController {
             HttpServletResponse response,
             @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO
     ) {
+        final String token = request.getHeader("Authorization");
         authService.logout(
-                jwtAccessTokenProvider.resolveToken(request),
+                jwtAccessTokenProvider.resolveToken(token),
                 refreshTokenRequestDTO.getRefreshToken()
         );
 

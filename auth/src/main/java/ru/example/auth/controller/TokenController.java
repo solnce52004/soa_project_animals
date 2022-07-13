@@ -51,11 +51,12 @@ public class TokenController {
     public ResponseEntity<ResponseDTO> verifyAccessToken(
             HttpServletRequest request
     ) {
-        TokenInfoDTO tokenInfoDTO = accessTokenService.process(
-                jwtAccessTokenProvider.resolveToken(request));
+        final String authHeader = request.getHeader("Authorization");
+        TokenInfoDTO dto = accessTokenService.process(
+                jwtAccessTokenProvider.resolveToken(authHeader));
 
         return ResponseEntity.ok(new ResponseDTO()
-                .setUsername(tokenInfoDTO.getUsername())
+                .setUsername(dto.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
 
@@ -77,13 +78,13 @@ public class TokenController {
     public ResponseEntity<TokenResponseDTO> refreshToken(
             @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO
     ) {
-        final TokenInfoDTO refreshed = refreshTokenService.process(
+        final TokenInfoDTO dto = refreshTokenService.process(
                 refreshTokenRequestDTO.getRefreshToken());
 
         return ResponseEntity.ok(new TokenResponseDTO()
-                .setAccessToken(refreshed.getAccessToken())
-                .setRefreshToken(refreshed.getRefreshToken())
-                .setUsername(refreshed.getUsername())
+                .setAccessToken(dto.getAccessToken())
+                .setRefreshToken(dto.getRefreshToken())
+                .setUsername(dto.getUsername())
                 .setHttpStatus(HttpStatus.OK));
     }
 }

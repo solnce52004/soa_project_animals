@@ -8,17 +8,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.example.auth.exception.custom_exception.JwtAuthException;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
-@Component
+@Service
 public class JwtAccessTokenProvider {
     private final UserDetailsService userDetailsService;
     private String secretKey;
@@ -78,12 +77,11 @@ public class JwtAccessTokenProvider {
         }
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    public String resolveToken(String token) {
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7);
         }
-        return authHeader;
+        return token;
     }
 
     public Authentication getAuthentication(String token) {

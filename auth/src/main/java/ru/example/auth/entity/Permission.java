@@ -13,19 +13,15 @@ import ru.example.auth.enums.PermissionEnum;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "permissions", catalog = "auth_db", schema = "public")
+@Table(name = "permissions")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @Accessors(chain = true)
-@EqualsAndHashCode(exclude = {"id", "roles"})
-@ToString(exclude = {"id", "roles"})
-@DynamicUpdate
-@DynamicInsert
 public class Permission implements Serializable {
     private static final long serialVersionUID = -681869902302420104L;
 
@@ -46,4 +42,24 @@ public class Permission implements Serializable {
     )
     @Fetch(value = FetchMode.JOIN)
     private Set<Role> roles = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Permission that = (Permission) o;
+        return getTitle().equals(that.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle());
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }

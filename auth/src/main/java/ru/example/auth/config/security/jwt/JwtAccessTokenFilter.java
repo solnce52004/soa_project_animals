@@ -1,7 +1,7 @@
 package ru.example.auth.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +24,13 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@AllArgsConstructor
 public class JwtAccessTokenFilter extends GenericFilterBean {
     private final JwtAccessTokenProvider jwtAccessTokenProvider;
+
+    @Autowired
+    public JwtAccessTokenFilter(JwtAccessTokenProvider jwtAccessTokenProvider) {
+        this.jwtAccessTokenProvider = jwtAccessTokenProvider;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -36,7 +40,8 @@ public class JwtAccessTokenFilter extends GenericFilterBean {
         HttpServletResponse res = (HttpServletResponse) response;
 
         //вытащили из запроса по тайному названию хэдера - токен
-        final String token = jwtAccessTokenProvider.resolveToken(req);
+        final String authHeader = req.getHeader("Authorization");
+        final String token = jwtAccessTokenProvider.resolveToken(authHeader);
 
         try {
             // проверили, что не протух

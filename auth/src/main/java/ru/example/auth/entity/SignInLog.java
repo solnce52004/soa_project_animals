@@ -10,14 +10,12 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
-@Table(name = "sign_in_logs", catalog = "auth_db", schema = "public")
+@Table(name = "sign_in_logs")
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(exclude = {"id"})
-@ToString(exclude = {"id"})
+@Getter @Setter
 @DynamicUpdate
 @DynamicInsert
 public class SignInLog implements Serializable {
@@ -39,5 +37,27 @@ public class SignInLog implements Serializable {
 
     public SignInLog(String ip) {
         this.ip = ip;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SignInLog signInLog = (SignInLog) o;
+        return getIp().equals(signInLog.getIp()) &&
+                getCreatedAt().equals(signInLog.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIp(), getCreatedAt());
+    }
+
+    @Override
+    public String toString() {
+        return "SignInLog{" +
+                "ip='" + ip + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

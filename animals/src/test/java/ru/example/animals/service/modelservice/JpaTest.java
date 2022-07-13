@@ -1,4 +1,4 @@
-package ru.example.animals.controller;
+package ru.example.animals.service.modelservice;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.MethodOrderer;
@@ -18,7 +18,6 @@ import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
 import ru.example.animals.repo.AnimalRepository;
 import ru.example.animals.repo.AnimalTypeRepository;
-import ru.example.animals.service.modelservice.AnimalService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 

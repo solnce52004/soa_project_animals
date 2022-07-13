@@ -1,8 +1,10 @@
 package ru.example.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -10,19 +12,16 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
-@Table(name = "refresh_tokens", catalog = "auth_db", schema = "public")
+@Table(name = "refresh_tokens")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @Accessors(chain = true)
-@EqualsAndHashCode(exclude = {"id", "user"})
-@ToString(exclude = {"id", "user"})
 @DynamicUpdate
 @DynamicInsert
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RefreshToken implements Serializable {
     private static final long serialVersionUID = 7256066343928666315L;
 
@@ -41,4 +40,26 @@ public class RefreshToken implements Serializable {
 
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RefreshToken that = (RefreshToken) o;
+        return getToken().equals(that.getToken()) &&
+                getExpiresAt().equals(that.getExpiresAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getToken(), getExpiresAt());
+    }
+
+    @Override
+    public String toString() {
+        return "RefreshToken{" +
+                "token='" + token + '\'' +
+                ", expiresAt=" + expiresAt +
+                '}';
+    }
 }
