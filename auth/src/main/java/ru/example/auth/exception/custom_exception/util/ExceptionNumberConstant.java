@@ -2,27 +2,32 @@ package ru.example.auth.exception.custom_exception.util;
 
 public final class ExceptionNumberConstant {
 
-    public static final Integer E1 = 1;
-    public static final Integer E2 = 2;
-    public static final Integer E3 = 3;
-    public static final Integer E4 = 4;
-    public static final Integer E5 = 5;
-    public static final Integer E6 = 6;
-    public static final Integer E7 = 7;
-    public static final Integer E8 = 8;
-    public static final Integer E9 = 9;
-    public static final Integer E10 = 10;
-    public static final Integer E11 = 11;
-    public static final Integer E12 = 12;
-    public static final Integer E13 = 13;
-    public static final Integer E14 = 14;
-    public static final Integer E15 = 15;
-    public static final Integer E16 = 16;
-    public static final Integer E17 = 17;
-    public static final Integer E18 = 18;
-    public static final Integer E19 = 19;
-    public static final Integer E20 = 20;
-    public static final Integer E21 = 21;
-    public static final Integer E22 = 22;
-    public static final Integer E23 = 23;
+    public static final Integer E1001 = 1001;
+
+    public static final Integer E1100 = 1100;
+    public static final Integer E1101 = 1101;
+    public static final Integer E1102 = 1102;
+    public static final Integer E1103 = 1103;
+
+    public static final Integer E1200 = 1200;
+    public static final Integer E1201 = 1201;
+    public static final Integer E1202 = 1202;
+    public static final Integer E1203 = 1203;
+
+    public static final Integer E1300 = 1300;
+    public static final Integer E1301 = 1301;
+    public static final Integer E1302 = 1302;
+    public static final Integer E1303 = 1303;
+    public static final Integer E1304 = 1304;
+
+    public static final Integer E1400 = 1400;
+    public static final Integer E1401 = 1401;
+    public static final Integer E1402 = 1402;
+    public static final Integer E1403 = 1403;
+
+    public static final Integer E1500 = 1500;
+    public static final Integer E1501 = 1501;
+    public static final Integer E1502 = 1502;
+    public static final Integer E1503 = 1503;
+    public static final Integer E1504 = 1504;
 }

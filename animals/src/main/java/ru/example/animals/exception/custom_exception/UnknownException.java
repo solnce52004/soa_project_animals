@@ -1,19 +1,20 @@
-package ru.example.auth.exception.custom_exception;
+package ru.example.animals.exception.custom_exception;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.example.auth.exception.custom_exception.util.BaseException;
+import ru.example.animals.exception.custom_exception.util.BaseException;
 
-import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.E1001;
+import static ru.example.animals.exception.custom_exception.util.ExceptionNumberConstant.E2001;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class UnknownException
         extends RuntimeException implements BaseException {
 
-    private static final long serialVersionUID = 7156896501383355316L;
+    private static final long serialVersionUID = -4143920970329548478L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.INTERNAL_SERVER_ERROR;
     public static final String MSG = "Something went wrong";
-    private static final Integer NUM = E1001;
+    private static final Integer NUM = E2001;
 
     public UnknownException() {
         super(MSG);

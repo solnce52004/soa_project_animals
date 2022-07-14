@@ -8,7 +8,8 @@ import ru.example.animals.dto.request.PatchAnimalTypeRequestDTO;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
 import ru.example.animals.enums.GenderType;
-import ru.example.animals.exception.custom_exception.*;
+import ru.example.animals.exception.custom_exception.animal.*;
+import ru.example.animals.exception.custom_exception.auth.UserUnauthorizedException;
 import ru.example.animals.repo.AnimalRepository;
 import ru.example.animals.repo.AnimalTypeRepository;
 

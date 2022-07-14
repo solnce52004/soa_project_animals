@@ -3,7 +3,6 @@ package ru.example.auth.exception.custom_exception.auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.example.auth.exception.custom_exception.util.BaseException;
-import ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant;
 
 import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.*;
 
@@ -14,7 +13,7 @@ public class RegistrationException
     private static final long serialVersionUID = 877407583157105977L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.CONFLICT;
     public static final String MSG = "Username is already in use";
-    private static final Integer NUM = E7;
+    private static final Integer NUM = E1201;
 
     public RegistrationException() {
         super(MSG);

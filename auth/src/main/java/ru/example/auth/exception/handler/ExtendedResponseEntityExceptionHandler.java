@@ -39,7 +39,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError();
         body.setTimestamp(LocalDateTime.now());
-        body.setErrorNum(E19);
+        body.setErrorNum(E1500);
         body.setDetailMessage(ex.getMessage());
         body.setHttpStatus(status.value());
         body.setErrors(
@@ -66,7 +66,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setErrorNum(E20)
+                .setErrorNum(E1501)
                 .setDetailMessage("(NoHandlerFoundException) The handler for the request method was not found")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
@@ -100,7 +100,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setErrorNum(E21)
+                .setErrorNum(E1502)
                 .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpRequestMethodNotSupportedException) Type method",
@@ -130,7 +130,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setErrorNum(E22)
+                .setErrorNum(E1503)
                 .setDetailMessage("ServletRequestBindingException")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
@@ -163,7 +163,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
-                .setErrorNum(E23)
+                .setErrorNum(E1504)
                 .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpMediaTypeNotSupportedException) (Media) Content-Type",

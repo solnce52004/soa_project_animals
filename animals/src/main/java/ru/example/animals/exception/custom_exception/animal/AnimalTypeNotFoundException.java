@@ -1,21 +1,21 @@
-package ru.example.auth.exception.custom_exception.auth;
+package ru.example.animals.exception.custom_exception.animal;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.example.auth.exception.custom_exception.util.BaseException;
+import ru.example.animals.exception.custom_exception.util.BaseException;
 
-import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.*;
+import static ru.example.animals.exception.custom_exception.util.ExceptionNumberConstant.E2103;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNotFoundException
+public class AnimalTypeNotFoundException
         extends RuntimeException implements BaseException {
 
-    private static final long serialVersionUID = 6180818340283218416L;
+    private static final long serialVersionUID = 459565084379563395L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.NOT_FOUND;
-    private static final String MSG = "Not found";
-    private static final Integer NUM = E1203;
+    public static final String MSG = "Animal type not found";
+    private static final Integer NUM = E2103;
 
-    public UserNotFoundException() {
+    public AnimalTypeNotFoundException() {
         super(MSG);
     }
 

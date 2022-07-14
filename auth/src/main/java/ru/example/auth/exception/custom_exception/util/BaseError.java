@@ -24,7 +24,7 @@ public class BaseError implements Serializable {
     private LocalDateTime timestamp;
     private int httpStatus;
     private HttpStatus httpStatusName;
-    private String detailMessage;
     private Integer errorNum;
+    private String detailMessage;
     private Map<String, Set<String>> errors;
 }

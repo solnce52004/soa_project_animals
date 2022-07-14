@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.http.HttpStatus;
 import ru.example.animals.dto.AnimalDTO;
-import ru.example.animals.exception.custom_exception.BaseError;
+import ru.example.animals.exception.custom_exception.util.BaseError;
 
 import java.io.Serializable;
 import java.util.HashSet;

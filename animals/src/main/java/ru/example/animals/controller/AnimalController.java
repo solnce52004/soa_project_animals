@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.example.animals.dto.AnimalDTO;
 import ru.example.animals.dto.request.PatchAnimalTypeRequestDTO;
 import ru.example.animals.dto.response.ResponseDTO;
-import ru.example.animals.exception.custom_exception.InvalidUsernameException;
-import ru.example.animals.exception.custom_exception.UserUnauthorizedException;
+import ru.example.animals.exception.custom_exception.auth.InvalidUsernameException;
+import ru.example.animals.exception.custom_exception.auth.UserUnauthorizedException;
 import ru.example.animals.service.api.VerifyAccessTokenService;
 import ru.example.animals.service.modelservice.AnimalService;
 

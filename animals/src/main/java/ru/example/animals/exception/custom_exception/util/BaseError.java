@@ -1,4 +1,4 @@
-package ru.example.animals.exception.custom_exception;
+package ru.example.animals.exception.custom_exception.util;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,6 +25,7 @@ public class BaseError implements Serializable {
     private LocalDateTime timestamp = LocalDateTime.now();
     private int httpStatus;
     private HttpStatus httpStatusName;
+    private Integer errorNum;
     private String detailMessage;
     private Map<String, Set<String>> errors;
 }

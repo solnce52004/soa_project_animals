@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.example.animals.dto.response.VerifyTokenResponseDTO;
-import ru.example.animals.exception.custom_exception.VerifyTokenException;
+import ru.example.animals.exception.custom_exception.auth.VerifyTokenException;
 
 import java.util.Collections;
 

@@ -3,7 +3,6 @@ package ru.example.auth.exception.custom_exception.jwt_token;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.example.auth.exception.custom_exception.util.BaseException;
-import ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant;
 
 import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.*;
 
@@ -15,7 +14,7 @@ public class EmptyClaimsJwtTokenException
     private static final long serialVersionUID = 4270705130356202098L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.FORBIDDEN;
     public static final String MSG = "JWT claims string is empty";
-    private static final Integer NUM = E10;
+    private static final Integer NUM = E1300;
 
     public EmptyClaimsJwtTokenException() {
         super(MSG);

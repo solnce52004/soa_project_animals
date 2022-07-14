@@ -3,7 +3,6 @@ package ru.example.auth.exception.custom_exception.jwt_token;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.example.auth.exception.custom_exception.util.BaseException;
-import ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant;
 
 import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.*;
 
@@ -15,7 +14,7 @@ public class ExpiredJwtTokenException
     private static final long serialVersionUID = -5036380268735914366L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.FORBIDDEN;
     public static final String MSG = "Expired JWT token";
-    private static final Integer NUM = E11;
+    private static final Integer NUM = E1301;
 
     public ExpiredJwtTokenException() {
         super(MSG);
