@@ -12,7 +12,7 @@ public class UserNotFoundException
 
     private static final long serialVersionUID = 6180818340283218416L;
     private static final HttpStatus HTTP_STATUS = HttpStatus.NOT_FOUND;
-    private static final String MSG = "Not found";
+    private static final String MSG = "User not found";
     private static final Integer NUM = E1203;
 
     public UserNotFoundException() {
