@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import org.springframework.http.HttpStatus;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
-import ru.example.auth.exception.custom_exception.BaseError;
+import ru.example.auth.exception.custom_exception.util.BaseError;
 
 import java.io.Serializable;
 

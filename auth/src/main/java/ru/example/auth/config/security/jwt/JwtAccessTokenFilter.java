@@ -10,8 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import ru.example.auth.dto.response.ResponseDTO;
-import ru.example.auth.exception.custom_exception.BaseError;
-import ru.example.auth.exception.custom_exception.JwtAuthException;
+import ru.example.auth.exception.custom_exception.util.BaseError;
+import ru.example.auth.exception.custom_exception.util.BaseException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,7 +52,7 @@ public class JwtAccessTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        } catch (JwtAuthException e) {
+        } catch (RuntimeException e) {
             //при перехвате ошибки валидации токена
             //чистим контекст и в респонс AbstractHandlerExceptionResolver пробрасываем ошибку с пойманным статусом
             SecurityContextHolder.clearContext();
@@ -62,7 +62,12 @@ public class JwtAccessTokenFilter extends GenericFilterBean {
             res.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
             res.setHeader(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.name());
 
+            Integer numException = (e instanceof BaseException)
+                    ? ((BaseException) e).getNum()
+                    : null;
+
             BaseError error = new BaseError()
+                    .setErrorNum(numException)
                     .setDetailMessage(e.getMessage())
                     .setHttpStatus(HttpStatus.FORBIDDEN.value())
                     .setHttpStatusName(HttpStatus.FORBIDDEN);

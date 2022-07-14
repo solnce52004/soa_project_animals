@@ -1,4 +1,4 @@
-package ru.example.auth.exception.custom_exception;
+package ru.example.auth.exception.custom_exception.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -25,5 +25,6 @@ public class BaseError implements Serializable {
     private int httpStatus;
     private HttpStatus httpStatusName;
     private String detailMessage;
+    private Integer errorNum;
     private Map<String, Set<String>> errors;
 }

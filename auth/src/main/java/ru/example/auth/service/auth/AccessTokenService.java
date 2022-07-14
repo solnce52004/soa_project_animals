@@ -8,7 +8,10 @@ import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
 import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.User;
-import ru.example.auth.exception.custom_exception.AccessTokenException;
+import ru.example.auth.exception.custom_exception.access_token.EmptyAccessTokenException;
+import ru.example.auth.exception.custom_exception.access_token.ExpiredAndDeletedAccessTokenException;
+import ru.example.auth.exception.custom_exception.access_token.InvalidAccessTokenException;
+import ru.example.auth.exception.custom_exception.access_token.MissingAccessTokenException;
 import ru.example.auth.repo.AccessTokenRepository;
 
 import java.time.Instant;
@@ -34,20 +37,20 @@ public class AccessTokenService implements TokenService<AccessToken> {
     @Override
     public TokenInfoDTO process(String tokenValue) {
         if (tokenValue == null || tokenValue.isEmpty()) {
-            throw new AccessTokenException("Access-token is empty");
+            throw new EmptyAccessTokenException();
         }
 
         final AccessToken currentAccessToken = findByToken(tokenValue)
-                .orElseThrow(() -> new AccessTokenException("Access-token is missing from the database"));
+                .orElseThrow(MissingAccessTokenException::new);
 
         final String accessToken = currentAccessToken.getToken();
         if (accessToken == null || !jwtAccessTokenProvider.validateToken(accessToken)) {
-            throw new AccessTokenException("Token is invalid");
+            throw new InvalidAccessTokenException();
         }
 
         final User user = verifyExpiration(currentAccessToken).getUser();
         if (user == null) {
-            throw new AccessTokenException("Access-token in database is invalid");
+            throw new InvalidAccessTokenException();
         }
 
         return new TokenInfoDTO()
@@ -64,7 +67,7 @@ public class AccessTokenService implements TokenService<AccessToken> {
     public AccessToken verifyExpiration(AccessToken token) {
         if (token.getExpiresAt().compareTo(Instant.now()) < 0) {
             deleteToken(token.getToken());
-            throw new AccessTokenException("Access token was expired and deleted");
+            throw new ExpiredAndDeletedAccessTokenException();
         }
         return token;
     }

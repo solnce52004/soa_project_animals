@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.example.auth.exception.custom_exception.JwtAuthException;
+import ru.example.auth.exception.custom_exception.jwt_token.*;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
@@ -65,15 +65,15 @@ public class JwtAccessTokenProvider {
             return !claimsJws.getBody().getExpiration().before(new Date());
 
         } catch (SignatureException e) {
-            throw new JwtAuthException("Invalid JWT signature");
+            throw new InvalidSignatureJwtTokenException();
         } catch (MalformedJwtException e) {
-            throw new JwtAuthException("Invalid JWT token");
+            throw new InvalidJwtTokenException();
         } catch (ExpiredJwtException e) {
-            throw new JwtAuthException("JWT token is expired");
+            throw new ExpiredJwtTokenException();
         } catch (UnsupportedJwtException e) {
-            throw new JwtAuthException("JWT token is unsupported");
+            throw new UnsupportedJwtTokenException();
         } catch (IllegalArgumentException e) {
-            throw new JwtAuthException("JWT claims string is empty");
+            throw new EmptyClaimsJwtTokenException();
         }
     }
 

@@ -9,7 +9,10 @@ import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.entity.User;
-import ru.example.auth.exception.custom_exception.RefreshTokenException;
+import ru.example.auth.exception.custom_exception.refresh_token.EmptyRefreshTokenException;
+import ru.example.auth.exception.custom_exception.refresh_token.ExpiredAndDeletedRefreshTokenException;
+import ru.example.auth.exception.custom_exception.refresh_token.InvalidRefreshTokenException;
+import ru.example.auth.exception.custom_exception.refresh_token.MissingRefreshTokenException;
 import ru.example.auth.repo.RefreshTokenRepository;
 
 import java.time.Instant;
@@ -36,15 +39,15 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
     @Override
     public TokenInfoDTO process(String tokenValue) {
         if (tokenValue == null || tokenValue.isEmpty()) {
-            throw new RefreshTokenException("Refresh-token is empty");
+            throw new EmptyRefreshTokenException();
         }
 
         final RefreshToken currentRefreshToken = findByToken(tokenValue)
-                .orElseThrow(() -> new RefreshTokenException("Refresh-token is missing from the database"));
+                .orElseThrow(MissingRefreshTokenException::new);
 
         final User user = verifyExpiration(currentRefreshToken).getUser();
         if (user == null) {
-            throw new RefreshTokenException("Refresh-token in database is invalid");
+            throw new InvalidRefreshTokenException();
         }
 
         final AccessToken accessToken = accessTokenService.createToken(user);
@@ -65,7 +68,7 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().compareTo(Instant.now()) < 0) {
             deleteToken(token.getToken());
-            throw new RefreshTokenException("Refresh token was expired and deleted");
+            throw new ExpiredAndDeletedRefreshTokenException();
         }
         return token;
     }

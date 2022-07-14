@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.example.auth.entity.SignInLog;
-import ru.example.auth.exception.custom_exception.TooManySignInAttemptsException;
+import ru.example.auth.exception.custom_exception.auth.TooManySignInAttemptsException;
 import ru.example.auth.repo.SignInLogRepository;
 
 import java.util.Calendar;

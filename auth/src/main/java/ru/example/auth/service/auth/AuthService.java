@@ -15,8 +15,8 @@ import ru.example.auth.dto.request.AuthRequestDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
 import ru.example.auth.entity.User;
-import ru.example.auth.exception.custom_exception.RegistrationException;
-import ru.example.auth.exception.custom_exception.UserNotFoundException;
+import ru.example.auth.exception.custom_exception.auth.RegistrationException;
+import ru.example.auth.exception.custom_exception.auth.UserNotFoundException;
 import ru.example.auth.service.by_entities.UserService;
 
 import java.util.Set;
@@ -37,7 +37,7 @@ public class AuthService {
                 .orElse(null);
 
         if (userExist != null) {
-            throw new RegistrationException("Username already registered");
+            throw new RegistrationException();
         }
     }
 

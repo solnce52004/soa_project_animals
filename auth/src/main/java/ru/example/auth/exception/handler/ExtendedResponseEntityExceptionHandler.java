@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.example.auth.exception.custom_exception.BaseError;
+import ru.example.auth.exception.custom_exception.util.BaseError;
 import ru.example.auth.exception.mapper.MapperErrorFieldsByMethodArgumentNotValid;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import static ru.example.auth.exception.custom_exception.util.ExceptionNumberConstant.*;
 
 @RestControllerAdvice
 public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -35,16 +37,17 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
             HttpStatus status,
             @NonNull WebRequest request
     ) {
-        BaseError body = new BaseError()
-                .setTimestamp(LocalDateTime.now())
-                .setDetailMessage(ex.getMessage())
-                .setHttpStatus(status.value())
-                .setErrors(
-                        new MapperErrorFieldsByMethodArgumentNotValid()
-                                .getErrors(ex)
-                )
-                .setHttpStatus(status.value())
-                .setHttpStatusName(status);
+        BaseError body = new BaseError();
+        body.setTimestamp(LocalDateTime.now());
+        body.setErrorNum(E19);
+        body.setDetailMessage(ex.getMessage());
+        body.setHttpStatus(status.value());
+        body.setErrors(
+                new MapperErrorFieldsByMethodArgumentNotValid()
+                        .getErrors(ex)
+        );
+        body.setHttpStatus(status.value());
+        body.setHttpStatusName(status);
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -63,6 +66,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
+                .setErrorNum(E20)
                 .setDetailMessage("(NoHandlerFoundException) The handler for the request method was not found")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
@@ -96,6 +100,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
+                .setErrorNum(E21)
                 .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpRequestMethodNotSupportedException) Type method",
@@ -125,6 +130,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
     ) {
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
+                .setErrorNum(E22)
                 .setDetailMessage("ServletRequestBindingException")
                 .setHttpStatus(status.value())
                 .setHttpStatusName(status);
@@ -157,6 +163,7 @@ public class ExtendedResponseEntityExceptionHandler extends ResponseEntityExcept
 
         BaseError body = new BaseError()
                 .setTimestamp(LocalDateTime.now())
+                .setErrorNum(E23)
                 .setDetailMessage(String.format(
                         CUSTOM_MSG_TEMPLATE_NOT_SUPPORTED,
                         "(HttpMediaTypeNotSupportedException) (Media) Content-Type",
