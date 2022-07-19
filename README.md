@@ -111,11 +111,14 @@
 
 #### В корне каждого модуля сохранен скомпилированный jar-файл
 [animals-0.0.1-SNAPSHOT.jar](animals/animals-0.0.1-SNAPSHOT.jar)
+
 [auth-0.0.1-SNAPSHOT.jar](auth/auth-0.0.1-SNAPSHOT.jar)
 
 #### Коллекции для тестирования в Postman
 [animal-project.postman_collection.json](animal-project.postman_collection.json)
 
+#### For dev: Start mock server dashboard (http://localhost:<port>/mockserver/dashboard, comment -> "mockServer.stop()")
+    java -jar ./mockserver-netty-5.13.2-shaded.jar -serverPort <port>
 
 #### Документация API Auth
 [Auth Swagger Api Documentation](http://localhost:8020/auth/swagger-ui/)

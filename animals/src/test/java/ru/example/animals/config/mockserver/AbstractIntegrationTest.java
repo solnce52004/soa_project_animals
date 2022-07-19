@@ -21,8 +21,8 @@ import ru.example.animals.config.container.ContainersEnvironment;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(initializers = {AbstractIntegrationTest.Initializer.class})
-
 public abstract class AbstractIntegrationTest extends ContainersEnvironment {
+
     private static final String IMAGE_NAME = "jamesdbloom/mockserver:mockserver-5.13.2";
 
     @Container
