@@ -1,9 +1,9 @@
 package ru.example.animals.service.modelservice;
 
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+import ru.example.animals.config.container.ContainersEnvironment;
 import ru.example.animals.controller.util.AnimalUtil;
 import ru.example.animals.entity.Animal;
 import ru.example.animals.entity.AnimalType;
@@ -21,12 +23,11 @@ import ru.example.animals.repo.AnimalTypeRepository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class JpaTest {
+public class JpaTest extends ContainersEnvironment {
 
     private static final String ANIMAL_TYPE_DOG = "dog";
     private static final String ANIMAL_TYPE_CAT = "cat";
@@ -38,15 +39,19 @@ public class JpaTest {
     private AnimalTypeRepository animalTypeRepository;
     @Autowired
     TestEntityManager testEntityManager;
-//    @Autowired
-//    Flyway flyway;
 
-//    @BeforeEach
-//    public void setup() {
-//        flyway.clean();
-//        flyway.migrate();
-//    }
-//
+    @BeforeClass
+    public static void setupContainer() {
+        postgreSQLContainer.start();
+        applyMigrate(postgreSQLContainer);
+    }
+
+    @AfterClass
+    public static void shutdown() {
+        cleanMigrate();
+        postgreSQLContainer.stop();
+    }
+
     @Test
     public void pingDbTest() {
         assertThat(animalRepository).isNotNull();
@@ -54,6 +59,7 @@ public class JpaTest {
     }
 
     @Test
+    @Transactional
     public void testAnimalExistsExceptionIsThrown() {
         final Animal animal1 = buildAnimalWithPersistedType(
                 "user_1", "Tom_1", ANIMAL_TYPE_CAT);
@@ -76,18 +82,18 @@ public class JpaTest {
                 ANIMAL_TYPE_DOG);
 
         final Animal savedAnimal = saveAnimal(newAnimal);
-//        this.testEntityManager.flush();
+        this.testEntityManager.flush();
 
-        final Animal animalById = animalRepository.findById(savedAnimal.getId())
-                .orElse(null);
+        final Animal animalByName = animalRepository.findByAnimalName(savedAnimal.getAnimalName());
 
-        if (animalById != null) {
-            animalById.setCreatedAt(null).setUpdatedAt(null);
+        if (animalByName != null) {
+            animalByName.setCreatedAt(null).setUpdatedAt(null);
         }
 
+        assertThat(animalByName).isNotNull();
         assertThat(newAnimal)
                 .usingRecursiveComparison()
-                .isEqualTo(animalById);
+                .isEqualTo(animalByName);
     }
 
     private Animal buildAnimalWithPersistedType(
