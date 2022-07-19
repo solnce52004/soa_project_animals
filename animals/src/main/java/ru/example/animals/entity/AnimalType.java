@@ -11,8 +11,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * List of animal`s types - already exists in db and immutable
@@ -33,6 +32,10 @@ public class AnimalType {
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy="animalType")
+//    @Fetch(value = FetchMode.JOIN)
+//    private Set<Animal> allAnimals = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)

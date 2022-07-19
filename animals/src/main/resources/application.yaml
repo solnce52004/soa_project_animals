@@ -30,18 +30,18 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   flyway:
-    enabled: true
+    enabled: false
     url: jdbc:postgresql://localhost:5432/animals_db
     user: ${DB_USER}
     password: ${DB_PASSWORD}
     fail-on-missing-locations: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    out-of-order: true
+    out-of-order: false
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-    generate-ddl: true
+    generate-ddl: false
     show-sql: true
     open-in-view: false
     hibernate:
@@ -50,10 +50,12 @@ spring:
       ############
     properties:
       hibernate:
-        generate_statistics: true
+        default_schema: "public"
+#        generate_statistics: true
         current_session_context_class: thread
         default_batch_fetch_size: 5
         format_sql: true
+        globally_quoted_identifiers: true
         connection:
           autocommit: false
         jdbc:
@@ -70,11 +72,17 @@ spring:
       write_dates_as_timestamps: false
   mvc:
     throw-exception-if-no-handler-found: true
+  mustache:
+    check-template-location: false
 
 logging:
   config: classpath:log4j2.properties
 
-verify-token-url: http://localhost:8020/auth/api/v1/verify/token
+auth:
+  api:
+    base-verify-token-url: http://localhost:8020
+verify-token-url: ${auth.api.base-verify-token-url}/auth/api/v1/verify/token
+#verify-token-url: http://localhost:8020/auth/api/v1/verify/token
 ---
 #DEV
 spring:
