@@ -12,6 +12,7 @@ import java.util.Date;
 
 public final class AnimalUtil {
     public static final String USERNAME = "tester";
+    public static final String BEARER_TOKEN = "Bearer token";
 
     public static String getRandomUsername() {
         return "test_" + Math.random();

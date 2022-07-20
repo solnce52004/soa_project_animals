@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.*;
 class VerifyAccessTokenServiceTest {
 
     private static final String USERNAME_VERIFIED = AnimalUtil.USERNAME;
-    private static final String BEARER_TOKEN = "Bearer token";
+    private static final String BEARER_TOKEN = AnimalUtil.BEARER_TOKEN;
 
     @MockBean
     RestTemplate restTemplate;

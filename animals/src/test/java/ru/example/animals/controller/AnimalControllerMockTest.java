@@ -30,7 +30,7 @@ import static ru.example.animals.controller.util.AnimalUtil.*;
 class AnimalControllerMockTest {
 
     private static final String USERNAME_VERIFIED = USERNAME;
-    private static final String BEARER_TOKEN = "Bearer token";
+    private static final String BEARER_TOKEN = AnimalUtil.BEARER_TOKEN;
     private static final AnimalDTO testAnimal1 = initAnimal(1L, "Barsik");
     private static final AnimalDTO testAnimal2 = initAnimal(2L, "Barsik2");
     private static final String AUTHORIZATION = "Authorization";
