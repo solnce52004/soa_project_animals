@@ -3,7 +3,6 @@ package ru.example.auth.service.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.example.auth.config.security.jwt.JwtAccessTokenProvider;
 import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.entity.AccessToken;
@@ -92,7 +91,6 @@ public class AccessTokenService implements TokenService<AccessToken> {
     }
 
     @Override
-    @Transactional
     public void deleteToken(String tokenValue) {
         accessTokenRepository.deleteByToken(tokenValue);
     }
