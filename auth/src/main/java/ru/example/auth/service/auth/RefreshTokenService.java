@@ -4,7 +4,6 @@ package ru.example.auth.service.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.example.auth.dto.TokenInfoDTO;
 import ru.example.auth.entity.AccessToken;
 import ru.example.auth.entity.RefreshToken;
@@ -85,7 +84,6 @@ public class RefreshTokenService implements TokenService<RefreshToken> {
                         .setExpiresAt(getNewExpiresAt()));
     }
 
-    @Transactional
     @Override
     public void deleteToken(String tokenValue) {
         refreshTokenRepository.deleteByToken(tokenValue);
