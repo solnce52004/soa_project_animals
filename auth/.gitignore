@@ -33,17 +33,17 @@ build/
 .vscode/
 
 .DS_Store
-!**/src/.DS_Store
-!**/src/main/.DS_Store
-!**/src/main/java/.DS_Store
-!**/src/main/java/ru/.DS_Store
-!**/src/main/java/ru/example/.DS_Store
-!**/src/main/java/ru/example/auth/.DS_Store
-!**/src/main/java/ru/example/auth/exception/.DS_Store
-!**/src/main/java/ru/example/auth/service/.DS_Store
-!**/src/main/resources/.DS_Store
-!**/src/main/resources/db/.DS_Store
-!**/src/main/resources/db/migration/.DS_Store
+src/.DS_Store
+src/main/.DS_Store
+src/main/java/.DS_Store
+src/main/java/ru/.DS_Store
+src/main/java/ru/example/.DS_Store
+src/main/java/ru/example/auth/.DS_Store
+src/main/java/ru/example/auth/exception/.DS_Store
+src/main/java/ru/example/auth/service/.DS_Store
+src/main/resources/.DS_Store
+src/main/resources/db/.DS_Store
+src/main/resources/db/migration/.DS_Store
 
 /logs/
 /logs-test/
