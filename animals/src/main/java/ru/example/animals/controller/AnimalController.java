@@ -54,7 +54,7 @@ public class AnimalController {
             HttpServletRequest request
     ) {
         final String usernameVerified = getUsernameVerified(request);
-        verifyUsernames(username, usernameVerified);
+        verifyUsernames(usernameVerified, username);
 
         final Set<AnimalDTO> animals = animalService.findAllAnimalsByUsername(username);
 
@@ -215,7 +215,7 @@ public class AnimalController {
 
     ////////
     private String getUsernameVerified(HttpServletRequest request) {
-        final String token = request.getHeader(verifyAccessTokenService.HEADER_NAME_AUTHORIZATION);
+        final String token = request.getHeader(VerifyAccessTokenService.HEADER_NAME_AUTHORIZATION);
         return verifyAccessTokenService.verifyToken(token);
     }
 
